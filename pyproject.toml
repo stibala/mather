@@ -1,0 +1,6 @@
+[project]
+name = "mather"
+version = "1.0.0"
+description = "Numo Math Club - a static arithmetic trainer for kids. No build step, no dependencies."
+requires-python = ">=3.10"
+dependencies = []
