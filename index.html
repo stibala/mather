@@ -212,8 +212,45 @@ button{font:inherit;color:inherit;cursor:pointer}
 :root[data-theme="dark"] .say.good{color:var(--leaf)} :root[data-theme="dark"] .say.bad{color:var(--berry)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .say.good{color:var(--leaf)}:root:not([data-theme="light"]) .say.bad{color:var(--berry)}}
 
+/* ---------- the number line ---------- */
+#figHost{margin-bottom:14px}
+.figPrompt{
+  margin:0 0 8px;text-align:center;font-family:Fredoka,sans-serif;font-weight:500;
+  font-size:1.12rem;color:var(--ink);text-wrap:balance;
+}
+.linefig{width:100%;height:auto;display:block;overflow:visible}
+.stage.wide{gap:6px}
+.stage.wide .mascot{width:62px;height:62px;margin-bottom:-2px}
+@media (max-width:420px){ .stage.wide .mascot{width:48px;height:48px} }
+
 /* ---------- the clock ---------- */
 .opts.two{grid-template-columns:repeat(2,1fr)}
+.opts.modes{grid-template-columns:repeat(auto-fit,minmax(104px,1fr))}
+.opts.ops{grid-template-columns:repeat(auto-fit,minmax(74px,1fr))}
+#opOpts .opt:nth-child(5){--sel:var(--grape);--sel-d:var(--grape);--sel-soft:color-mix(in srgb,var(--grape) 16%,var(--surface))}
+#opOpts .opt:nth-child(6){--sel:var(--sun-d);--sel-d:var(--sun-d);--sel-soft:color-mix(in srgb,var(--sun) 26%,var(--surface))}
+#moneyCentsOpts .opt,#clockTaskOpts .opt{--sel:var(--leaf);--sel-d:var(--leaf-d);--sel-soft:color-mix(in srgb,var(--leaf) 15%,var(--surface))}
+.eq .word{color:var(--ink-2);font-size:.62em}
+.clockpair{display:flex;gap:10px;align-items:center;justify-content:center;flex-wrap:wrap}
+.clockpair figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:3px}
+.clockpair .clockface{width:min(148px,40vw)}
+.clockpair figcaption{font-size:.72rem;font-weight:800;color:var(--ink-2);text-transform:uppercase;letter-spacing:.06em}
+.clockarrow{font-family:Fredoka,sans-serif;font-size:2.1rem;color:var(--tangerine);line-height:1;margin-bottom:14px}
+.daypart.span{color:var(--tangerine-d);border-color:var(--tangerine);background:color-mix(in srgb,var(--tangerine) 13%,var(--surface))}
+:root[data-theme="dark"] .daypart.span{color:var(--tangerine)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .daypart.span{color:var(--tangerine)}}
+#tableOpts .opt{padding:9px 4px}
+#tableOpts .opt .t{font-size:1.15rem}
+#tableOpts .opt{--sel:var(--tangerine);--sel-d:var(--tangerine-d);--sel-soft:color-mix(in srgb,var(--tangerine) 16%,var(--surface))}
+#wallRowsOpts .opt,#wallToOpts .opt{--sel:var(--berry);--sel-d:var(--berry-d);--sel-soft:color-mix(in srgb,var(--berry) 15%,var(--surface))}
+#moneyToOpts .opt,#moneyTaskOpts .opt{--sel:var(--leaf);--sel-d:var(--leaf-d);--sel-soft:color-mix(in srgb,var(--leaf) 15%,var(--surface))}
+.figart{width:100%;height:auto;display:block;overflow:visible;max-width:460px;margin:0 auto}
+.figart.wide{max-width:470px}
+.slot.cash{min-width:clamp(120px,32vw,170px)}
+.hint{margin:10px 0 0;font-size:.8rem;font-weight:700;color:var(--ink-2);text-align:center}
+.hint.warn{color:var(--berry-d)}
+:root[data-theme="dark"] .hint.warn{color:var(--berry)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .hint.warn{color:var(--berry)}}
 #clockHost{display:flex;flex-direction:column;align-items:center;gap:9px;margin-bottom:14px}
 .daypart{
   display:inline-flex;align-items:center;gap:6px;font-weight:800;font-size:.9rem;color:var(--ink-2);
@@ -229,6 +266,21 @@ button{font:inherit;color:inherit;cursor:pointer}
 .slot.time{min-width:clamp(74px,21vw,98px);letter-spacing:.05em}
 .slot.time.here{border-color:var(--tangerine);color:var(--tangerine);background:color-mix(in srgb,var(--tangerine) 12%,var(--surface))}
 .slot.time .ph{color:var(--ink-3);opacity:.55}
+
+/* stopping is a quiet way out, not a headline — a small pill, not a full-width
+   button competing with the keypad, and one less tall row on the screen */
+.quit{
+  align-self:center;width:auto;padding:8px 20px;border-radius:999px;
+  background:transparent;border:2px solid var(--line);color:var(--ink-2);
+  font-family:Nunito,sans-serif;font-weight:800;font-size:.84rem;
+  transition:transform .08s,color .12s;
+}
+.quit:active{transform:translateY(2px)}
+.quit:hover{color:var(--ink)}
+
+/* the quiz sits a little tighter than the settings list */
+#quiz{gap:11px}
+#quiz .say{min-height:22px}
 
 /* ---------- keypad ---------- */
 .pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -269,7 +321,91 @@ button{font:inherit;color:inherit;cursor:pointer}
 .stickers{display:flex;gap:8px;flex-wrap:wrap}
 .sticker{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;font-size:1.45rem;
   background:var(--surface-2);border:2px solid var(--line);box-shadow:0 2px 0 var(--shadow)}
-.sticker.new{border-color:var(--sun);background:color-mix(in srgb,var(--sun) 22%,var(--surface));animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+.sticker.new{animation:pop .5s cubic-bezier(.2,1.6,.4,1)}
+
+/* ---------- the crate ---------- */
+.crate{position:relative;display:grid;place-items:center;padding:4px 0 2px;cursor:pointer;user-select:none}
+.crateart{width:min(168px,54%);height:auto;display:block;overflow:visible}
+.crate-lid{transform-box:fill-box;transform-origin:14% 90%;transition:transform .5s cubic-bezier(.2,1.5,.4,1)}
+.crate.shut .crateart{animation:nudge 2s ease-in-out infinite}
+@keyframes nudge{0%,88%,100%{transform:rotate(0)}92%{transform:rotate(-3.5deg)}96%{transform:rotate(3.5deg)}}
+.crate.open .crate-lid{transform:translate(-9px,-22px) rotate(-32deg)}
+.crate.open .crateart{animation:none}
+/* once it has been emptied it fades and folds away, rather than blinking out */
+.crate.spent{overflow:hidden;animation:crateGone .62s ease-in forwards}
+@keyframes crateGone{
+  0%{opacity:1;transform:none;max-height:210px}
+  55%{opacity:0;transform:translateY(12px) scale(.82);max-height:210px}
+  100%{opacity:0;transform:translateY(12px) scale(.82);max-height:0;padding:0}
+}
+.burst{
+  position:absolute;width:190px;height:190px;border-radius:50%;opacity:0;pointer-events:none;
+  background:radial-gradient(circle,var(--sun) 0,transparent 66%);
+}
+.burst.on{animation:burst .85s ease-out}
+@keyframes burst{0%{opacity:0;transform:scale(.3)}25%{opacity:.85}100%{opacity:0;transform:scale(1.5)}}
+.loot{display:flex;flex-wrap:wrap;justify-content:center;gap:14px;min-height:6px;margin-top:10px}
+.loot figure{margin:0;display:flex;flex-direction:column;align-items:center;gap:2px;animation:popOut .55s cubic-bezier(.2,1.7,.4,1) backwards}
+@keyframes popOut{0%{transform:translateY(26px) scale(.3);opacity:0}60%{opacity:1}100%{transform:none;opacity:1}}
+.loot .art{font-size:2.3rem;line-height:1;filter:drop-shadow(0 2px 2px rgba(0,0,0,.25))}
+.loot .tag{font-size:.66rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--ink-2)}
+.loot figure.star .art{font-size:3rem;filter:drop-shadow(0 0 10px var(--glow,var(--sun))) drop-shadow(0 2px 3px rgba(0,0,0,.3))}
+.loot figure.star .tag{color:var(--ring,var(--sun))}
+
+/* ---------- Numo's bowl ---------- */
+.bowl{display:flex;flex-direction:column;align-items:center;gap:8px;position:relative;padding-top:26px}
+.bowlcat{font-size:3.6rem;line-height:1}
+.bowlcat.chomp{animation:chomp .55s cubic-bezier(.3,1.4,.4,1)}
+@keyframes chomp{0%,100%{transform:none}28%{transform:scale(1.2) rotate(-7deg)}55%{transform:scale(.94) rotate(3deg)}}
+.bowlfood{position:absolute;top:96px;font-size:1.9rem;opacity:0;pointer-events:none}
+.bowlfood.fly{animation:fly .62s ease-in forwards}
+@keyframes fly{0%{opacity:1;transform:translateY(8px) scale(1)}100%{opacity:0;transform:translateY(-52px) scale(.45)}}
+.bowlsay{
+  position:absolute;top:0;white-space:nowrap;pointer-events:none;
+  background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:3px 12px;
+  font-family:Fredoka,sans-serif;font-weight:600;font-size:.95rem;color:var(--tangerine-d);
+  opacity:0;transform:translateY(6px) scale(.8);transition:opacity .2s,transform .25s cubic-bezier(.3,1.5,.4,1);
+}
+.bowlsay.on{opacity:1;transform:translateY(0) scale(1)}
+:root[data-theme="dark"] .bowlsay{color:var(--tangerine)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .bowlsay{color:var(--tangerine)}}
+.bowlcount{margin:2px 0 4px;font-weight:800;color:var(--ink-2);font-size:.92rem}
+.bowlcount b{font-family:Fredoka,sans-serif;font-size:1.5rem;color:var(--ink);font-variant-numeric:tabular-nums}
+.tin{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;max-width:330px;max-height:126px;overflow-y:auto}
+.tinempty{margin:4px 0;font-size:.85rem;font-weight:700;color:var(--ink-2);text-align:center}
+.tin button{
+  position:relative;width:44px;height:44px;border-radius:14px;display:grid;place-items:center;font-size:1.45rem;
+  background:var(--surface-2);border:2px solid var(--line);box-shadow:0 2px 0 var(--shadow);
+  touch-action:none;transition:transform .1s;
+}
+.tin button:active{transform:scale(1.14)}
+.tin.empty button{opacity:.32;cursor:default}
+.tin .count{
+  position:absolute;top:-6px;right:-6px;min-width:20px;height:20px;padding:0 5px;
+  border-radius:999px;background:var(--tangerine);color:#fff;border:2px solid var(--surface);
+  font-family:Fredoka,sans-serif;font-weight:600;font-size:.74rem;line-height:16px;
+  display:grid;place-items:center;pointer-events:none;
+}
+.tin button.lifted{opacity:.3}
+.ghost{position:fixed;z-index:90;font-size:2.4rem;pointer-events:none;transform:translate(-50%,-50%);
+  filter:drop-shadow(0 3px 4px rgba(0,0,0,.35))}
+.catdrop-over{animation:chomp .4s}
+#catDrop{border-radius:50%}
+
+/* ---------- what Numo is carrying ---------- */
+.held{
+  position:absolute;right:-14px;bottom:2px;z-index:3;
+  font-size:2rem;line-height:1;pointer-events:none;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.28));
+  animation:bob 2.6s ease-in-out infinite;
+}
+@keyframes bob{0%,100%{transform:translateY(0) rotate(-5deg)}50%{transform:translateY(-5px) rotate(5deg)}}
+.held.fresh{animation:landOn .55s cubic-bezier(.2,1.6,.4,1), bob 2.6s ease-in-out .55s infinite}
+@keyframes landOn{0%{transform:translateY(-34px) scale(1.7) rotate(-20deg);opacity:0}60%{opacity:1}100%{transform:none}}
+.bowlcatwrap{position:relative;display:inline-block}
+.stage.wide .held{font-size:1.4rem;right:-10px}
+.sv-art.given{animation:handOver .45s ease-in forwards}
+@keyframes handOver{0%{transform:none;opacity:1}100%{transform:translateY(64px) scale(.32) rotate(-16deg);opacity:0}}
 
 /* ---------- coins-to-next-sticker bar ---------- */
 .coinbar{margin-top:13px}
@@ -317,18 +453,39 @@ button{font:inherit;color:inherit;cursor:pointer}
   background:var(--surface-2);border:2px solid var(--line);font-size:1.15rem;
   font-family:Fredoka,sans-serif;line-height:1;color:var(--ink-2);
 }
+.sv-gallery{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 12px}
+.arrow{
+  width:40px;height:40px;flex:none;border-radius:999px;display:grid;place-items:center;
+  background:var(--surface-2);border:2px solid var(--line);color:var(--ink-2);
+  font-family:Fredoka,sans-serif;font-size:1.6rem;line-height:1;padding-bottom:4px;
+  transition:transform .08s;
+}
+.arrow:active{transform:scale(.92)}
+.arrow:disabled{opacity:.26;cursor:default}
 .sv-art{
-  width:150px;height:150px;margin:2px auto 12px;border-radius:38px;
+  width:150px;height:150px;flex:none;margin:0;border-radius:38px;
   display:grid;place-items:center;font-size:5.4rem;line-height:1;
-  background:radial-gradient(circle at 50% 42%,var(--sun-soft,color-mix(in srgb,var(--sun) 32%,var(--surface))) 0,var(--surface-2) 72%);
-  border:3px solid var(--sun);
+  background:radial-gradient(circle at 50% 42%,var(--glow,var(--sun)) 0,var(--surface-2) 74%);
+  border:3px solid var(--ring,var(--sun));
 }
 .sv-art.locked{border-color:var(--line);border-style:dashed;background:var(--surface-2);color:var(--ink-3);font-family:Fredoka,sans-serif;font-size:4rem}
 .sv-name{margin:0;font-family:Fredoka,sans-serif;font-weight:600;font-size:1.6rem;line-height:1.15}
 .sv-meta{margin:2px 0 16px;font-size:.85rem;font-weight:700;color:var(--ink-2)}
+.sheet #giveBtn{margin-top:2px}
 .sv-nav{display:flex;gap:9px}
 .sv-nav button{flex:1;font-size:.95rem;padding:11px 8px}
 .sv-nav button:disabled{opacity:.35;cursor:default}
+.sticker.won{border-color:var(--ring);background:radial-gradient(circle at 50% 35%,var(--glow) 0,var(--surface-2) 78%);box-shadow:0 2px 0 var(--ring)}
+.best{
+  width:26px;height:26px;flex:none;border-radius:9px;display:grid;place-items:center;font-size:.92rem;
+  border:2px solid var(--ring,var(--line));background:radial-gradient(circle at 50% 35%,var(--glow,var(--surface-2)) 0,var(--surface-2) 80%);
+}
+.bestrow{display:flex;align-items:center;gap:11px;margin:-4px 0 14px}
+.bestrow span:last-child{display:flex;flex-direction:column;line-height:1.25}
+.bestrow b{font-family:Fredoka,sans-serif;font-weight:600;font-size:1.06rem}
+.bestrow em{font-style:normal;font-size:.76rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.best.big-best{width:52px;height:52px;border-radius:16px;font-size:1.9rem;border-width:3px}
+.sv-art{border-color:var(--ring,var(--sun))}
 button.sticker{font-family:inherit}
 button.sticker:active{transform:translateY(2px);box-shadow:none}
 .sticker.locked{border-style:dashed;color:var(--ink-3);font-family:Fredoka,sans-serif;font-size:1.3rem}
@@ -368,6 +525,39 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
 .mascot.shake{animation:shake .42s}
 @keyframes shake{0%,100%{transform:none}20%{transform:translateX(-7px) rotate(-4deg)}50%{transform:translateX(7px) rotate(4deg)}80%{transform:translateX(-4px)}}
 .bubble.buzz{animation:shake .42s}
+
+/* the cat gets bored when a question sits too long: looks around, meows, dozes off */
+.cat{position:relative;flex:none}
+.cat .mascot{display:block;overflow:visible}
+.mascot .lid,.mascot .zzz,.mascot .squint,.mascot .yawnMouth{display:none}
+.mascot.yawn{transform-origin:50% 100%;animation:yawnStretch 2s ease-in-out}
+@keyframes yawnStretch{0%,100%{transform:none}35%,65%{transform:scale(.97,1.06) rotate(-3deg)}}
+.mascot.yawn .eye,.mascot.yawn .pupil,.mascot.yawn #mouth{display:none}
+.mascot.yawn .squint,.mascot.yawn .yawnMouth{display:inline}
+.mascot .yawnMouth{transform-box:fill-box;transform-origin:50% 0;animation:yawnOpen 2s ease-in-out forwards}
+@keyframes yawnOpen{0%{transform:scale(.4,.15)}35%,65%{transform:scale(1)}100%{transform:scale(.4,.15)}}
+.mascot .pupil{transform-box:fill-box;transform-origin:center}
+.mascot.look .pupil{animation:lookAround 2.4s ease-in-out}
+@keyframes lookAround{0%,100%{transform:none}20%,40%{transform:translate(-5px,-2px)}60%,80%{transform:translate(5px,-2px)}}
+.mascot.tilt{animation:tilt 1s ease-in-out}
+@keyframes tilt{0%,100%{transform:none}30%,70%{transform:rotate(-9deg)}}
+.mascot.sleep{transform-origin:50% 100%;animation:breathe 3.2s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:none}50%{transform:scale(1.035,.97)}}
+.mascot.sleep .eye,.mascot.sleep .pupil{display:none}
+.mascot.sleep .lid,.mascot.sleep .zzz{display:inline}
+.mascot .zzz text{opacity:.85;animation:zFloat 3s ease-in infinite}
+.mascot .zzz text:nth-child(2){animation-delay:1s}
+.mascot .zzz text:nth-child(3){animation-delay:2s}
+@keyframes zFloat{0%{opacity:0;transform:translate(-6px,8px)}25%{opacity:.9}100%{opacity:0;transform:translate(4px,-8px)}}
+.purr{
+  position:absolute;left:50%;bottom:calc(100% - 12px);z-index:2;white-space:nowrap;pointer-events:none;
+  background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:3px 10px;
+  font-family:Fredoka,sans-serif;font-weight:600;font-size:.95rem;color:var(--tangerine-d);
+  opacity:0;transform:translate(-50%,6px) scale(.8);transition:opacity .2s,transform .25s cubic-bezier(.3,1.5,.4,1);
+}
+.purr.on{opacity:1;transform:translate(-50%,0) scale(1)}
+:root[data-theme="dark"] .purr{color:var(--tangerine)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .purr{color:var(--tangerine)}}
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
 }
@@ -415,9 +605,75 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
 
     <section class="panel">
       <h2>What shall we practise?</h2>
-      <div class="opts two" id="modeOpts">
+      <div class="opts modes" id="modeOpts">
         <button class="opt" data-mode="sum"   aria-pressed="true"><span class="t">Numbers</span><span class="s">3 + 4 = 7</span></button>
+        <button class="opt" data-mode="line"  aria-pressed="false"><span class="t">Number line</span><span class="s">jump along it</span></button>
+        <button class="opt" data-mode="wall"  aria-pressed="false"><span class="t">Number wall</span><span class="s">Zahlenmauer</span></button>
+        <button class="opt" data-mode="money" aria-pressed="false"><span class="t">Money</span><span class="s">euro and cent</span></button>
         <button class="opt" data-mode="clock" aria-pressed="false"><span class="t">The clock</span><span class="s">what time is it?</span></button>
+      </div>
+    </section>
+
+    <section class="panel for-wall" hidden>
+      <h2>How tall is the wall? <small>two bricks make the one above</small></h2>
+      <div class="opts two" id="wallRowsOpts">
+        <button class="opt" data-wall-rows="3" aria-pressed="true"><span class="t">3 rows</span><span class="s">6 bricks</span></button>
+        <button class="opt" data-wall-rows="4" aria-pressed="false"><span class="t">4 rows</span><span class="s">10 bricks</span></button>
+      </div>
+    </section>
+
+    <section class="panel for-wall" hidden>
+      <h2>How big does it go? <small>the top brick stays under this</small></h2>
+      <div class="opts three" id="wallToOpts">
+        <button class="opt" data-wall-to="20"  aria-pressed="true"><span class="t">to 20</span></button>
+        <button class="opt" data-wall-to="50"  aria-pressed="false"><span class="t">to 50</span></button>
+        <button class="opt" data-wall-to="100" aria-pressed="false"><span class="t">to 100</span></button>
+      </div>
+    </section>
+
+    <section class="panel for-money" hidden>
+      <h2>How much money?</h2>
+      <div class="opts three" id="moneyToOpts">
+        <button class="opt" data-money-to="1000"  aria-pressed="true"><span class="t">to 10 €</span><span class="s">coins</span></button>
+        <button class="opt" data-money-to="2000"  aria-pressed="false"><span class="t">to 20 €</span><span class="s">coins &amp; notes</span></button>
+        <button class="opt" data-money-to="10000" aria-pressed="false"><span class="t">to 100 €</span><span class="s">notes &amp; coins</span></button>
+      </div>
+    </section>
+
+    <section class="panel for-money" hidden>
+      <h2>With cents? <small>whole euros are easier to start with</small></h2>
+      <div class="opts two" id="moneyCentsOpts">
+        <button class="opt" data-money-cents="no"  aria-pressed="true"><span class="t">Whole euros</span><span class="s">7 €</span></button>
+        <button class="opt" data-money-cents="yes" aria-pressed="false"><span class="t">Euro and cent</span><span class="s">7,35 €</span></button>
+      </div>
+    </section>
+
+    <section class="panel for-money" hidden>
+      <h2>Which question?</h2>
+      <div class="opts three" id="moneyTaskOpts">
+        <button class="opt" data-money-task="count"  aria-pressed="true"><span class="t">Count it</span><span class="s">how much is this?</span></button>
+        <button class="opt" data-money-task="change" aria-pressed="false"><span class="t">Change</span><span class="s">what comes back?</span></button>
+        <button class="opt" data-money-task="mixed"  aria-pressed="false"><span class="t">Mixed</span><span class="s">a bit of each</span></button>
+      </div>
+    </section>
+
+    <section class="panel for-line" hidden>
+      <h2>How big are the numbers? <small>the big line zooms in</small></h2>
+      <div class="opts three" id="lineToOpts">
+        <button class="opt" data-line-to="10"  aria-pressed="true"><span class="t">0 to 10</span><span class="s">whole line</span></button>
+        <button class="opt" data-line-to="20"  aria-pressed="false"><span class="t">0 to 20</span><span class="s">whole line</span></button>
+        <button class="opt" data-line-to="100" aria-pressed="false"><span class="t">Up to 100</span><span class="s">zoomed in</span></button>
+      </div>
+    </section>
+
+    <section class="panel for-line" hidden>
+      <h2>Which question? <small>all three read off the line</small></h2>
+      <div class="opts five" id="lineTaskOpts">
+        <button class="opt" data-line-task="read"  aria-pressed="false"><span class="t">Read it</span><span class="s">where's the arrow?</span></button>
+        <button class="opt" data-line-task="land"  aria-pressed="false"><span class="t">Jump</span><span class="s">where do you land?</span></button>
+        <button class="opt" data-line-task="jump"  aria-pressed="false"><span class="t">How far?</span><span class="s">how big a jump?</span></button>
+        <button class="opt" data-line-task="round" aria-pressed="false"><span class="t">Round it</span><span class="s">nearest ten</span></button>
+        <button class="opt" data-line-task="mixed" aria-pressed="true"><span class="t">Mixed</span><span class="s">a bit of each</span></button>
       </div>
     </section>
 
@@ -426,6 +682,16 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
       <div class="opts two" id="systemOpts">
         <button class="opt" data-system="12" aria-pressed="true"><span class="t">12 hours</span><span class="s">3:30</span></button>
         <button class="opt" data-system="24" aria-pressed="false"><span class="t">24 hours</span><span class="s">15:30</span></button>
+      </div>
+    </section>
+
+    <section class="panel for-clock" hidden>
+      <h2>Which question?</h2>
+      <div class="opts four" id="clockTaskOpts">
+        <button class="opt" data-clock-task="read"  aria-pressed="true"><span class="t">Read it</span><span class="s">what time is it?</span></button>
+        <button class="opt" data-clock-task="later" aria-pressed="false"><span class="t">Later</span><span class="s">in 25 minutes?</span></button>
+        <button class="opt" data-clock-task="span"  aria-pressed="false"><span class="t">How long?</span><span class="s">minutes between</span></button>
+        <button class="opt" data-clock-task="mixed" aria-pressed="false"><span class="t">Mixed</span><span class="s">a bit of each</span></button>
       </div>
     </section>
 
@@ -458,6 +724,23 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
       </div>
     </section>
 
+    <section class="panel for-tables" hidden>
+      <h2>Which times tables? <small>pick one row to drill it</small></h2>
+      <div class="opts" id="tableOpts" style="grid-template-columns:repeat(5,1fr)">
+        <button class="opt" data-table="1" aria-pressed="true"><span class="t">1</span></button>
+        <button class="opt" data-table="2" aria-pressed="true"><span class="t">2</span></button>
+        <button class="opt" data-table="3" aria-pressed="true"><span class="t">3</span></button>
+        <button class="opt" data-table="4" aria-pressed="true"><span class="t">4</span></button>
+        <button class="opt" data-table="5" aria-pressed="true"><span class="t">5</span></button>
+        <button class="opt" data-table="6" aria-pressed="true"><span class="t">6</span></button>
+        <button class="opt" data-table="7" aria-pressed="true"><span class="t">7</span></button>
+        <button class="opt" data-table="8" aria-pressed="true"><span class="t">8</span></button>
+        <button class="opt" data-table="9" aria-pressed="true"><span class="t">9</span></button>
+        <button class="opt" data-table="10" aria-pressed="true"><span class="t">10</span></button>
+      </div>
+      <p class="hint" id="tableHint"></p>
+    </section>
+
     <section class="panel for-sum">
       <h2>Crossing ten? <small>the carry — for + and − only</small></h2>
       <div class="opts three" id="crossOpts">
@@ -469,11 +752,13 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
 
     <section class="panel for-sum">
       <h2>Which maths? <small>pick one or more</small></h2>
-      <div class="opts four" id="opOpts">
+      <div class="opts ops" id="opOpts">
         <button class="opt op" data-op="+" aria-pressed="true"><span class="t">+</span><span class="s">plus</span></button>
         <button class="opt op" data-op="−" aria-pressed="true"><span class="t">−</span><span class="s">minus</span></button>
         <button class="opt op" data-op="×" aria-pressed="false"><span class="t">×</span><span class="s">times</span></button>
         <button class="opt op" data-op="÷" aria-pressed="false"><span class="t">÷</span><span class="s">shared</span></button>
+        <button class="opt op" data-op="2×" aria-pressed="false"><span class="t">2×</span><span class="s">double</span></button>
+        <button class="opt op" data-op="½" aria-pressed="false"><span class="t">½</span><span class="s">half</span></button>
       </div>
     </section>
 
@@ -508,7 +793,10 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
       <span class="streak" id="streak">🔥 <span id="streakVal">0</span></span>
     </div>
 
-    <div class="stage">
+    <div class="stage" id="stage">
+      <div class="cat">
+      <span class="purr" id="purr" aria-hidden="true"></span>
+      <span class="held" id="heldQuiz" hidden aria-hidden="true"></span>
       <svg class="mascot" id="mascot" viewBox="0 0 120 120" aria-hidden="true">
         <path d="M30 44 L26 14 L54 32 Z" fill="var(--tangerine)" stroke="var(--tangerine-d)" stroke-width="3" stroke-linejoin="round"/>
         <path d="M90 44 L94 14 L66 32 Z" fill="var(--tangerine)" stroke="var(--tangerine-d)" stroke-width="3" stroke-linejoin="round"/>
@@ -517,14 +805,34 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
         <circle cx="85" cy="84" r="9" fill="var(--berry)" opacity=".45"/>
         <ellipse class="eye" cx="46" cy="66" rx="12" ry="13" fill="#fff"/>
         <ellipse class="eye" cx="74" cy="66" rx="12" ry="13" fill="#fff"/>
-        <circle id="pupilL" cx="46" cy="68" r="5.5" fill="#16264A"/>
-        <circle id="pupilR" cx="74" cy="68" r="5.5" fill="#16264A"/>
+        <circle class="pupil" id="pupilL" cx="46" cy="68" r="5.5" fill="#16264A"/>
+        <circle class="pupil" id="pupilR" cx="74" cy="68" r="5.5" fill="#16264A"/>
+        <path class="lid" d="M36 67 q10 7 20 0" fill="none" stroke="#16264A" stroke-width="3.4" stroke-linecap="round"/>
+        <path class="lid" d="M64 67 q10 7 20 0" fill="none" stroke="#16264A" stroke-width="3.4" stroke-linecap="round"/>
+        <path class="squint" d="M37 68 q9 -9 18 0" fill="none" stroke="#16264A" stroke-width="3.4" stroke-linecap="round"/>
+        <path class="squint" d="M65 68 q9 -9 18 0" fill="none" stroke="#16264A" stroke-width="3.4" stroke-linecap="round"/>
+        <g class="yawnMouth">
+          <ellipse cx="60" cy="92" rx="9" ry="12" fill="#16264A"/>
+          <ellipse cx="60" cy="99" rx="6" ry="4" fill="var(--berry)"/>
+        </g>
         <path id="mouth" d="M52 88 q8 7 16 0" fill="none" stroke="#16264A" stroke-width="3.4" stroke-linecap="round"/>
+        <g class="zzz" fill="var(--ocean)" font-family="Fredoka,sans-serif" font-weight="600">
+          <text x="92" y="30" font-size="15">z</text>
+          <text x="100" y="18" font-size="19">z</text>
+          <text x="110" y="4" font-size="23">Z</text>
+        </g>
       </svg>
+      </div>
       <div class="bubble" id="bubble">
+        <div id="figHost" hidden>
+          <p class="figPrompt" id="figPrompt"></p>
+          <div id="figArt"></div>
+        </div>
         <div id="clockHost" hidden>
+          <p class="figPrompt" id="clockPrompt" hidden></p>
           <span class="daypart" id="daypart"></span>
           <div id="clockFace"></div>
+          <span class="daypart span" id="spanChip" hidden></span>
           <div class="handkey"><span class="hk hour">short hand · hour</span><span class="hk min">long hand · minutes</span></div>
         </div>
         <div class="eq" id="eq" aria-live="polite"></div>
@@ -546,7 +854,7 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
       </button>
     </div>
 
-    <button class="go ghost" id="quitBtn">Stop and go back</button>
+    <button class="quit" id="quitBtn">Stop and go back</button>
   </main>
 
   <!-- ============ RESULT ============ -->
@@ -562,10 +870,39 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
       </div>
     </section>
 
+    <div id="bowlSlotResult"></div>
+
     <section class="panel" id="stickerPanel">
       <h2 id="stickerHead">Next sticker</h2>
       <div class="stickers" id="stickerRow"></div>
       <div class="coinbar" id="resultBar"></div>
+    </section>
+
+    <section class="panel" id="bowlPanel">
+      <h2 id="bowlHead">Numo's bowl <small>drag a treat up to Numo</small></h2>
+      <div class="crate shut" id="crateBox" role="button" tabindex="0" aria-label="Tap to open your crate" hidden>
+        <span class="burst" id="crateBurst" aria-hidden="true"></span>
+        <svg class="crateart" viewBox="0 0 132 108" aria-hidden="true">
+          <g class="crate-lid">
+            <rect x="12" y="20" width="108" height="20" rx="6" fill="#B07C42" stroke="#7E5525" stroke-width="3"/>
+            <rect x="26" y="26" width="80" height="6" rx="3" fill="#C99257"/>
+          </g>
+          <g class="crate-body">
+            <rect x="18" y="40" width="96" height="60" rx="8" fill="#C08A4C" stroke="#7E5525" stroke-width="3"/>
+            <path d="M18 58h96M18 78h96" stroke="#9A6A34" stroke-width="3"/>
+            <path d="M28 40v60M104 40v60" stroke="#9A6A34" stroke-width="3"/>
+            <rect x="56" y="62" width="20" height="16" rx="3" fill="#E3B46A" stroke="#7E5525" stroke-width="2.5"/>
+          </g>
+        </svg>
+      </div>
+      <div class="loot" id="lootRow"></div>
+      <div class="bowl">
+        <span class="bowlsay" id="bowlSay" aria-hidden="true"></span>
+        <div class="bowlcatwrap" id="catDrop"><div class="bowlcat" id="bowlCat" aria-hidden="true">🐱</div><span class="held" id="heldBowl" hidden aria-hidden="true"></span></div>
+        <span class="bowlfood" id="bowlFood" aria-hidden="true"></span>
+        <p class="bowlcount"><b id="treatCount">0</b> <span id="treatWord">treats</span> left</p>
+        <div class="tin" id="tin"></div>
+      </div>
     </section>
 
     <section class="panel" id="missPanel" hidden>
@@ -583,11 +920,13 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
   <main id="progress" class="stack" hidden>
     <section class="panel">
       <h2 id="progTitle">Progress</h2>
+      <div class="bestrow" id="bestPrize" hidden></div>
       <div class="tiles">
         <div class="tile"><div class="k">Questions</div><div class="v" id="pQ">0</div></div>
         <div class="tile"><div class="k">Average</div><div class="v" id="pAcc">—</div></div>
         <div class="tile"><div class="k">Best streak</div><div class="v" id="pStreak">0</div></div>
         <div class="tile"><div class="k">Coins</div><div class="v" id="pCoins">0</div></div>
+        <div class="tile"><div class="k">Treats</div><div class="v" id="pTreats">0</div></div>
       </div>
     </section>
 
@@ -597,10 +936,12 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
     </section>
 
     <section class="panel">
-      <h2>Stickers <small>tap one to see it big</small></h2>
+      <h2>Numo's things <small>tap one to see it big</small></h2>
       <div class="stickers" id="allStickers"></div>
       <div class="coinbar" id="collectionBar"></div>
     </section>
+
+    <div id="bowlSlotProgress"></div>
 
     <section class="panel">
       <h2>Recent rounds</h2>
@@ -619,14 +960,15 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
 <div class="overlay" id="stickerView" hidden>
   <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="svName">
     <button class="close" id="svClose" aria-label="Close">&times;</button>
-    <div class="sv-art" id="svArt" aria-hidden="true"></div>
+    <div class="sv-gallery">
+      <button class="arrow" id="svPrev" aria-label="Previous sticker">&lsaquo;</button>
+      <div class="sv-art" id="svArt" aria-hidden="true"></div>
+      <button class="arrow" id="svNext" aria-label="Next sticker">&rsaquo;</button>
+    </div>
     <p class="sv-name" id="svName"></p>
     <p class="sv-meta" id="svMeta"></p>
     <div class="coinbar" id="svBar" hidden></div>
-    <div class="sv-nav">
-      <button class="go ghost" id="svPrev">&lsaquo; Back</button>
-      <button class="go ghost" id="svNext">Next &rsaquo;</button>
-    </div>
+    <button class="go" id="giveBtn" hidden>Give to Numo</button>
   </div>
 </div>
 
@@ -654,20 +996,63 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
 
 /* ============================ storage ============================ */
 const KEY = "numo.math.club.v1";
-const STICKERS = [
-  { e:"🦊", name:"Fox" },       { e:"🐢", name:"Turtle" },   { e:"🐙", name:"Octopus" },
-  { e:"🦉", name:"Owl" },       { e:"🐝", name:"Bee" },      { e:"🦄", name:"Unicorn" },
-  { e:"🐳", name:"Whale" },     { e:"🦖", name:"Dinosaur" }, { e:"🐼", name:"Panda" },
-  { e:"🦁", name:"Lion" },      { e:"🐧", name:"Penguin" },  { e:"🐸", name:"Frog" },
-  { e:"🦋", name:"Butterfly" }, { e:"🐨", name:"Koala" },    { e:"🦩", name:"Flamingo" },
-  { e:"🐬", name:"Dolphin" }
-];
-const stickerAt = i => STICKERS[i % STICKERS.length];
-// A correct answer is 1 coin, plus 1 for every 5 in a row, so a round of ten is
-// about 12 coins and a sticker is about two good rounds. Changing either number
-// would silently restate what a child has already earned, so load() rescales old
-// balances by the same factor - see the v-flag migration there.
+// What a reward cost back when they were all one flat price. Only load()'s
+// migration needs it, so it lives here beside the key rather than among the
+// prize tables — those get rewritten, and it kept getting deleted with them.
 const PER_STICKER = 25;
+// Two kinds of reward, which is what lets the collection be finite.
+//
+//   TREATS are food for Numo. They come often, they are CONSUMED when you feed
+//   him, and so they can go on for ever without repeating themselves.
+//   STICKERS are kept. There are 36, they never repeat, and when the last one is
+//   won the collection is genuinely complete — the treats carry on regardless.
+//
+// The old design had one list that wrapped round and re-charged for prizes the
+// child already owned. Nothing wraps now.
+const TREAT_COST = 10;
+const TREATS = ["🐟","🥛","🍪","🧀","🍤","🥓","🍗","🥚","🍚","🍯","🥨","🍉"];
+const NOMS = ["Nom nom!","Purrr…","Meow!","Yum!","More?","Mrrrow!"];
+
+const TIERS = [
+  { name:"Bronze", kind:"toy",      cost:40,  ring:"#C07A3E", glow:"#EBB27C" },
+  { name:"Silver", kind:"treasure", cost:60,  ring:"#8D99A6", glow:"#D2DAE3" },
+  { name:"Gold",   kind:"place",    cost:90,  ring:"#C79413", glow:"#F7DB7A" },
+  { name:"Diamond",kind:"friend",   cost:130, ring:"#2FA8CC", glow:"#A6EAF8" }
+];
+const PRIZES = [
+  // bronze — toys
+  { e:"🧶", n:"Wool ball",  t:0 }, { e:"🎾", n:"Tennis ball", t:0 }, { e:"🪀", n:"Yo-yo",       t:0 },
+  { e:"🎣", n:"Fishing rod",t:0 }, { e:"📦", n:"Cardboard box",t:0 },{ e:"🪶", n:"Feather",     t:0 },
+  { e:"🔔", n:"Little bell",t:0 }, { e:"🎈", n:"Balloon",     t:0 }, { e:"🧸", n:"Teddy",       t:0 },
+  { e:"🪁", n:"Kite",       t:0 },
+  // silver — treasures
+  { e:"👑", n:"Crown",      t:1 }, { e:"🎩", n:"Top hat",     t:1 }, { e:"🏅", n:"Medal",       t:1 },
+  { e:"🗝️", n:"Golden key", t:1 }, { e:"💍", n:"Ring",        t:1 }, { e:"🏆", n:"Trophy",      t:1 },
+  { e:"🎺", n:"Trumpet",    t:1 }, { e:"🪄", n:"Magic wand",  t:1 }, { e:"🧭", n:"Compass",     t:1 },
+  { e:"🕰️", n:"Old clock",  t:1 },
+  // gold — places to take Numo
+  { e:"🏰", n:"Castle",     t:2 }, { e:"🚀", n:"Rocket",      t:2 }, { e:"🎪", n:"Circus",      t:2 },
+  { e:"🗺️", n:"Treasure map",t:2 },{ e:"⛵", n:"Sailing boat",t:2 }, { e:"🎡", n:"Big wheel",   t:2 },
+  { e:"🏝️", n:"Island",     t:2 }, { e:"🎠", n:"Carousel",    t:2 },
+  // diamond — friends who join the club
+  { e:"🦊", n:"Fox",        t:3 }, { e:"🦉", n:"Owl",         t:3 }, { e:"🐼", n:"Panda",       t:3 },
+  { e:"🦁", n:"Lion",       t:3 }, { e:"🐧", n:"Penguin",     t:3 }, { e:"🦄", n:"Unicorn",     t:3 },
+  { e:"🐬", n:"Dolphin",    t:3 }, { e:"🦖", n:"Dinosaur",    t:3 }
+];
+const prizeOf = i => PRIZES[i];
+const tierOf  = i => TIERS[PRIZES[Math.min(i, PRIZES.length - 1)].t];
+const THRESH = (() => { const out = []; let c = 0; PRIZES.forEach(p => { c += TIERS[p.t].cost; out.push(c); }); return out; })();
+const prizesFor = coins => { let k = 0; while (k < THRESH.length && THRESH[k] <= coins) k++; return k; };
+const ALL_DONE = THRESH[THRESH.length - 1];
+// Treats are earned from the same lifetime coins but are not paid for out of
+// them — feeding Numo never costs a child a sticker.
+const treatsEarned = coins => Math.floor(coins / TREAT_COST);
+// The tin holds actual treats — the ones crates have handed over — so a child can
+// only feed Numo what they really have, and can pick which.
+const tinOf = id => (statsOf(id).tin ||= []);
+const pantryOf = id => tinOf(id).length;
+// Faces for a player's own avatar — kept short, and separate from the prizes.
+const FACES = ["🦊","🐢","🐙","🦉","🐝","🦄","🐳","🦖","🐼","🦁","🐧","🐸","🦋","🐨","🦩","🐬"];
 const DEFAULT_DB = {
   active: "p1",
   profiles: [
@@ -677,10 +1062,15 @@ const DEFAULT_DB = {
   stats: {},                       // id -> {coins, bestStreak, questions}
   history: {},                     // id -> [{ts,acc,avgTime,n,ops,range,style}]
   settings: { mode:"sum", range:"10", ops:["+","−"], style:"mixed", cross:"mixed",
-              minutes:"hour", daypart:"morning", system:"12", count:10 },
+              minutes:"hour", daypart:"morning", system:"12",
+              lineTo:"10", lineTask:"mixed",
+              tables:[1,2,3,4,5,6,7,8,9,10],
+              wallRows:"3", wallTo:"20",
+              moneyTo:"1000", moneyTask:"count", moneyCents:"no",
+              clockTask:"read", count:10 },
   sound: true,
   theme: "system",
-  v: 3
+  v: 6
 };
 
 function load(){
@@ -691,6 +1081,8 @@ function load(){
     const db = Object.assign(structuredClone(DEFAULT_DB), stored);
     // settings gained a key, so merge that one a level deeper
     db.settings = Object.assign(structuredClone(DEFAULT_DB.settings), db.settings || {});
+    // the money ranges were rescaled from cents-sized to euro-sized
+    if (!["1000","2000","10000"].includes(db.settings.moneyTo)) db.settings.moneyTo = "1000";
     // Coins have been repriced twice. Rescale an older balance by price-then over
     // price-now, so nobody wakes up with fewer stickers than they went to bed with.
     const wasPricedAt = !stored.v ? 100 : stored.v === 2 ? 300 : PER_STICKER;
@@ -699,14 +1091,38 @@ function load(){
         st.coins = Math.floor((st.coins || 0) * PER_STICKER / wasPricedAt);
       });
     }
-    db.v = 3;
+    // Prizes used to be a flat 25 each; tiers made the later ones dearer, which
+    // would quietly take some back. Top the balance up to whatever the old flat
+    // price had already bought, so the collection only ever grows.
+    // Rewards split in two: the first 12 prizes were food, which are treats now
+    // and come out of the coin count anyway. Anything the child had beyond those
+    // was a keepsake, so top the balance up to hold that many stickers.
+    // Treats used to be a count; now they are items. Turn whatever was left in
+    // the old count into real treats so none of them vanish.
+    if (!stored.v || stored.v < 6){
+      Object.values(db.stats || {}).forEach(st => {
+        if (!Array.isArray(st.tin)){
+          const left = Math.max(0, Math.floor((st.coins || 0) / TREAT_COST) - (st.fed || 0));
+          st.tin = Array.from({ length: left }, () => TREATS[Math.floor(Math.random() * TREATS.length)]);
+        }
+      });
+    }
+    if (!stored.v || stored.v < 5){
+      Object.values(db.stats || {}).forEach(st => {
+        const hadFlat = Math.floor((st.coins || 0) / PER_STICKER);
+        const keepsakes = Math.min(Math.max(0, hadFlat - 12), THRESH.length);
+        if (keepsakes > 0) st.coins = Math.max(st.coins, THRESH[keepsakes - 1]);
+        st.fed = st.fed || 0;
+      });
+    }
+    db.v = 6;
     return db;
   } catch { return structuredClone(DEFAULT_DB); }
 }
 function save(){ try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch {} }
 
 let DB = load();
-const statsOf = id => (DB.stats[id] ||= { coins:0, bestStreak:0, questions:0 });
+const statsOf = id => (DB.stats[id] ||= { coins:0, bestStreak:0, questions:0, fed:0, holding:null, tin:[] });
 const histOf  = id => (DB.history[id] ||= []);
 const me      = () => DB.profiles.find(p => p.id === DB.active) || DB.profiles[0];
 
@@ -717,6 +1133,12 @@ const pick = arr => arr[Math.floor(Math.random() * arr.length)];
 const SCREENS = ["setup","quiz","result","progress"];
 function show(name){
   SCREENS.forEach(s => { $("#"+s).hidden = (s !== name); });
+  // one bowl, moved to whichever screen is up — feeding should not be something
+  // you can only do in the moment after a round ends
+  const slot = name === "progress" ? $("#bowlSlotProgress") : $("#bowlSlotResult");
+  if (slot && $("#bowlPanel").parentNode !== slot) slot.append($("#bowlPanel"));
+  $("#bowlPanel").hidden = (name !== "result" && name !== "progress");
+  if (name !== "result" && name !== "progress") flushCrate();
   $("#chartBtn").setAttribute("aria-pressed", String(name === "progress"));
   window.scrollTo(0, 0);
 }
@@ -754,6 +1176,99 @@ const sndTap   = () => beep([620], .05, "triangle", .07);
 const sndRight = () => beep([660, 880, 1170], .13, "triangle", .14);
 const sndWrong = () => beep([200, 150], .17, "sawtooth", .09);
 const sndDone  = () => beep([523, 659, 784, 1047], .16, "triangle", .15);
+// Numo does not make one noise. Crunchy things crunch, milk gets lapped, and the
+// rest earn a meow or a purr — each with a little pitch jitter so a run of feeds
+// never sounds like a loop.
+function noiseSrc(dur){
+  const n = Math.floor(ac.sampleRate * dur), buf = ac.createBuffer(1, n, ac.sampleRate);
+  const d = buf.getChannelData(0);
+  for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+  const src = ac.createBufferSource(); src.buffer = buf; return src;
+}
+function audioOn(){
+  if (!DB.sound) return false;
+  try {
+    ac ||= new (window.AudioContext || window.webkitAudioContext)();
+    if (ac.state === "suspended") ac.resume();
+    return true;
+  } catch { return false; }
+}
+function sndCrunch(){
+  if (!audioOn()) return;
+  const t0 = ac.currentTime;
+  for (let k = 0; k < 3; k++){
+    const t = t0 + k * (.085 + Math.random() * .03);
+    const src = noiseSrc(.07), f = ac.createBiquadFilter(), g = ac.createGain();
+    f.type = "highpass"; f.frequency.value = 900 + Math.random() * 700;
+    g.gain.setValueAtTime(.001, t);
+    g.gain.linearRampToValueAtTime(.12 - k * .025, t + .008);
+    g.gain.exponentialRampToValueAtTime(.0005, t + .07);
+    src.connect(f); f.connect(g); g.connect(ac.destination);
+    src.start(t); src.stop(t + .08);
+  }
+}
+function sndSlurp(){
+  if (!audioOn()) return;
+  const t = ac.currentTime, src = noiseSrc(.42);
+  const f = ac.createBiquadFilter(), g = ac.createGain();
+  f.type = "bandpass"; f.Q.value = 5;
+  f.frequency.setValueAtTime(380, t);
+  f.frequency.exponentialRampToValueAtTime(1900 + Math.random() * 400, t + .34);
+  g.gain.setValueAtTime(.001, t);
+  g.gain.linearRampToValueAtTime(.1, t + .06);
+  g.gain.exponentialRampToValueAtTime(.0005, t + .4);
+  src.connect(f); f.connect(g); g.connect(ac.destination);
+  src.start(t); src.stop(t + .43);
+}
+function sndPurr(){
+  if (!audioOn()) return;
+  const t = ac.currentTime, len = 1.15;
+  const o = ac.createOscillator(), g = ac.createGain(), lp = ac.createBiquadFilter();
+  o.type = "sawtooth"; o.frequency.value = 42 + Math.random() * 8;
+  lp.type = "lowpass"; lp.frequency.value = 420;
+  const lfo = ac.createOscillator(), depth = ac.createGain();
+  lfo.frequency.value = 20 + Math.random() * 6; depth.gain.value = .055;
+  lfo.connect(depth); depth.connect(g.gain);
+  g.gain.setValueAtTime(.06, t);
+  g.gain.setValueAtTime(.06, t + len - .25);
+  g.gain.exponentialRampToValueAtTime(.0005, t + len);
+  o.connect(lp); lp.connect(g); g.connect(ac.destination);
+  o.start(t); lfo.start(t); o.stop(t + len); lfo.stop(t + len);
+}
+// A voice, not a beep: a buzzy source goes through two vowel filters that slide
+// from "ee" to "ow" while the pitch lifts and falls, with a little wobble on top.
+function sndMeow(tune){
+  if (!audioOn()) return;
+  try {
+    const k = tune || 1;
+    const t = ac.currentTime, len = .75;
+    const src = ac.createOscillator();
+    src.type = "sawtooth";
+    src.frequency.setValueAtTime(560 * k, t);
+    src.frequency.linearRampToValueAtTime(760 * k, t + .22);
+    src.frequency.linearRampToValueAtTime(700 * k, t + .42);
+    src.frequency.exponentialRampToValueAtTime(420 * k, t + len);
+    const lfo = ac.createOscillator(), wob = ac.createGain();
+    lfo.frequency.value = 7; wob.gain.value = 12;
+    lfo.connect(wob); wob.connect(src.frequency);
+    const g = ac.createGain();
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(.05, t + .15);     // quiet and eased in - a background purr, not an alarm
+    g.gain.setValueAtTime(.05, t + .45);
+    g.gain.exponentialRampToValueAtTime(.0001, t + len);
+    [[2600, 1100], [1500, 800]].forEach(([from, to]) => {   // "ee" formants sliding to "ow"
+      const f = ac.createBiquadFilter();
+      f.type = "bandpass"; f.Q.value = 6;
+      f.frequency.setValueAtTime(from, t);
+      f.frequency.setValueAtTime(from, t + .18);
+      f.frequency.exponentialRampToValueAtTime(to, t + .55);
+      src.connect(f); f.connect(g);
+    });
+    g.connect(ac.destination);
+    src.start(t); lfo.start(t);
+    src.stop(t + len + .05); lfo.stop(t + len + .05);
+  } catch {}
+}
 
 /* ============================ questions ============================ */
 // A fact is [x, op, y, z] meaning  x op y = z.  Slot 0/1/2 says which one is hidden.
@@ -761,8 +1276,9 @@ const factCache = new Map();
 // Times-table facts inside a range. The 1-times facts are real but trivial, so
 // they go in once while the rest go in three times - that weights the draw
 // towards facts worth practising without dropping any.
-function mulFacts(max, forDivision){
-  const key = (forDivision ? "d" : "m") + max;
+function mulFacts(max, forDivision, tables){
+  const rows = (tables && tables.length) ? tables : [1,2,3,4,5,6,7,8,9,10];
+  const key = (forDivision ? "d" : "m") + max + "|" + rows.join("");
   if (factCache.has(key)) return factCache.get(key);
   const out = [];
   for (let x = 1; x <= 10; x++) for (let y = 1; y <= 10; y++){
@@ -772,11 +1288,14 @@ function mulFacts(max, forDivision){
                   : true;
     if (!inRange) continue;
     if (forDivision && y === 1) continue;            // "6 ÷ 1" teaches nothing
+    if (!rows.includes(x) && !rows.includes(y)) continue;   // only the chosen rows
     const times = (x === 1 || y === 1) ? 1 : 3;
     for (let i = 0; i < times; i++) out.push([x, y, p]);
   }
-  factCache.set(key, out);
-  return out;
+  // a row this narrow may hold nothing at this size — fall back rather than fail
+  const list = out.length ? out : mulFacts(max, forDivision, null);
+  factCache.set(key, list);
+  return list;
 }
 // "Crossing ten" is the carry or the borrow: 47 + 5 crosses because 7 + 5 spills
 // past a ten, while 44 + 3 stays inside one. That is its own difficulty step and
@@ -797,9 +1316,20 @@ function rawFact(op, max){
   const x = rnd(lo, hi), y = rnd(1, x - 1);
   return [x,"−",y,x-y];
 }
-function makeFact(op, max, cross){
-  if (op === "×"){ const [x,y,p] = pick(mulFacts(max, false)); return [x,"×",y,p]; }
-  if (op === "÷"){ const [x,y,p] = pick(mulFacts(max, true)); return [p,"÷",y,x]; }
+// Doubling and halving have one number in, one out — no second operand — so the
+// fact carries null in that slot and the row renders as "double 7 = ?".
+const UNARY = { "2×":"double", "½":"half of" };
+function makeFact(op, max, cross, tables){
+  if (UNARY[op]){
+    // draw from the even numbers inside the band — nudging an odd one down can
+    // push it under the band's floor (11 would become 10 in the "up to 20" band)
+    const [lo, hi] = SPAN[max];
+    const first = lo + (lo % 2), last = hi - (hi % 2);
+    const big = first + rnd(0, (last - first) / 2) * 2;
+    return op === "2×" ? [big / 2, "2×", null, big] : [big, "½", null, big / 2];
+  }
+  if (op === "×"){ const [x,y,p] = pick(mulFacts(max, false, tables)); return [x,"×",y,p]; }
+  if (op === "÷"){ const [x,y,p] = pick(mulFacts(max, true, tables)); return [p,"÷",y,x]; }
   const want = cross === "yes" ? true : cross === "no" ? false : null;
   let last = rawFact(op, max);
   if (want === null) return last;
@@ -830,20 +1360,46 @@ function makeClockQuestion(settings, seen){
   // hours run 1-12 and no part of the day needs saying. On a 24-hour clock the
   // same face means two different times, which is why that one shows the badge.
   const [lo, hi] = twelve ? [1, 12] : (DAY_HOURS[settings.daypart] || DAY_HOURS.any);
+  const task = settings.clockTask === "mixed" ? pick(["read","later","span"]) : (settings.clockTask || "read");
+  const asTime = (h, m) => ({
+    answer: twelve ? h + ":" + pad2(m) : fmtTime(h, m),
+    digits: twelve ? String(h) + pad2(m) : pad2(h) + pad2(m)
+  });
   let h = 0, m = 0, key = "";
   for (let t = 0; t < 60; t++){
     h = rnd(lo, hi);
     m = step === 1 ? rnd(0, 59) : rnd(0, 60 / step - 1) * step;
-    key = "c" + h + ":" + m;
+    key = "c" + task + h + ":" + m;
     if (!seen.has(key) || t > 54) break;
   }
   seen.add(key);
-  return {
-    kind:"clock", h, m, twelve, key,
-    answer: twelve ? h + ":" + pad2(m) : fmtTime(h, m),
-    digits: twelve ? String(h) + pad2(m) : pad2(h) + pad2(m)
-  };
+
+  if (task === "read"){
+    const a = asTime(h, m);
+    return { kind:"clock", task, h, m, twelve, key, ansH:h, ansM:m, maxDigits:4, keepZeros:true, ...a };
+  }
+  // A span keeps both faces on a grid the child can read: whole steps of the
+  // chosen minutes, or quarter hours when the setting is o'clock only.
+  const sstep = step >= 60 ? 15 : Math.max(5, step);
+  const span = sstep * rnd(1, Math.floor(60 / sstep));
+  const total = h * 60 + m + span;
+  const hi24 = twelve ? 12 : 24;
+  const end = total % (hi24 * 60);
+  let eh = Math.floor(end / 60), em = end % 60;
+  if (twelve && eh === 0) eh = 12;
+
+  if (task === "later"){
+    const a = asTime(eh, em);
+    return { kind:"clock", task, h, m, eh, em, span, twelve, key, ansH:eh, ansM:em,
+             maxDigits:4, keepZeros:true, ...a,
+             ask:"What time will it be?" };
+  }
+  return { kind:"clock", task:"span", h, m, eh, em, span, twelve, key,
+           answer: span, maxDigits:3, keepZeros:false,
+           ask:"How many minutes?" };
 }
+const isTimeQ = q => q.kind === "clock" && q.task !== "span";
+
 // Digits land left to right and the last two are always the minutes, so both
 // "330" and "0330" read as half past three. Nothing to teach about zero padding.
 function parseTypedTime(t){
@@ -853,7 +1409,7 @@ function parseTypedTime(t){
 const showTyped = t => t.length < 3 ? t : t.slice(0, t.length - 2) + ":" + t.slice(-2);
 
 // The hour hand creeps on as the minutes pass — that is how you read 3:45.
-function clockSVG(h, m){
+function clockSVG(h, m, sweep){
   const C = 100;
   const at = (deg, r) => [C + r * Math.sin(deg * Math.PI / 180), C - r * Math.cos(deg * Math.PI / 180)];
   let marks = "";
@@ -870,23 +1426,368 @@ function clockSVG(h, m){
          +  `font-family="Fredoka, sans-serif" font-size="20" font-weight="600" fill="var(--ink)">${n}</text>`;
   }
   const hourDeg = ((h % 12) + m / 60) * 30, minDeg = m * 6;
-  return `<svg class="clockface" viewBox="0 0 200 200" role="img" aria-label="An analogue clock — read the time from the hands">
-    <circle cx="100" cy="100" r="92" fill="var(--surface-2)" stroke="var(--ink-2)" stroke-width="4"/>
+  // The interval is drawn as a sweep round the rim, starting where the long hand
+  // stands now, so "in 25 minutes" is something you can see rather than read.
+  let ring = "";
+  if (sweep){
+    const R = 104, a0 = minDeg, a1 = a0 + Math.min(sweep, 58.5) * 6;
+    const [x0, y0] = at(a0, R), [x1, y1] = at(a1, R);
+    ring = `<circle cx="${x0.toFixed(1)}" cy="${y0.toFixed(1)}" r="5.5" fill="var(--tangerine)"/>`
+      + `<path d="M${x0.toFixed(1)} ${y0.toFixed(1)} A ${R} ${R} 0 ${a1 - a0 > 180 ? 1 : 0} 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" `
+      + `fill="none" stroke="var(--tangerine)" stroke-width="7" stroke-linecap="round"/>`
+      + `<g transform="translate(${x1.toFixed(1)} ${y1.toFixed(1)}) rotate(${a1.toFixed(1)})">`
+      + `<path d="M-2 -10 L13 0 L-2 10 Z" fill="var(--tangerine)"/></g>`;
+  }
+  const box = sweep ? "-22 -22 244 244" : "0 0 200 200";
+  return `<svg class="clockface" viewBox="${box}" role="img" aria-label="An analogue clock — read the time from the hands">
+    <circle cx="100" cy="100" r="92" fill="var(--surface-2)" stroke="var(--ink-2)" stroke-width="4"/>${ring}
     ${marks}${nums}
     <g transform="rotate(${minDeg.toFixed(2)} 100 100)"><line x1="100" y1="100" x2="100" y2="24" stroke="var(--ocean)" stroke-width="5" stroke-linecap="round"/></g>
     <g transform="rotate(${hourDeg.toFixed(2)} 100 100)"><line x1="100" y1="100" x2="100" y2="52" stroke="var(--tangerine)" stroke-width="8.5" stroke-linecap="round"/></g>
     <circle cx="100" cy="100" r="6.5" fill="var(--ink)"/></svg>`;
 }
 
+/* ---------- the number line ---------- */
+// A line of 100 ticks is unreadable on a phone. Rather than coarsen the ticks, the
+// big line ZOOMS: it shows a 10-20 wide window somewhere in 0-100, still ticked
+// every 1. Every number stays countable, and a jump can cross a ten.
+const LINE_VIEWS = {
+  "10":  () => ({ lo:0, hi:10, label:5, minJump:2, maxJump:5 }),
+  "20":  () => ({ lo:0, hi:20, label:5, minJump:2, maxJump:9 }),
+  "100": () => {
+    const w = pick([10, 15, 20]);
+    const lo = rnd(0, (100 - w) / 5) * 5;
+    return { lo, hi: lo + w, label:5, minJump:2, maxJump: Math.min(w - 2, 12) };
+  }
+};
+const LINE_ASKS = {
+  read: "Where is the arrow pointing?",
+  land: "Where do you land?",
+  jump: "How big is the jump?",
+  round: "Which ten is it nearest?"
+};
+function makeLineQuestion(settings, seen){
+  const tasks = settings.lineTask === "mixed" ? ["read","land","jump","round"] : [settings.lineTask];
+  let q = null, view = null;
+  for (let t = 0; t < 80; t++){
+    view = (LINE_VIEWS[settings.lineTo] || LINE_VIEWS["10"])();
+    const task = pick(tasks);
+    if (task === "round"){
+      // the window is pinned to whole tens so several are on screen to choose between
+      if (view.hi - view.lo > 20 || view.lo % 10){
+        const lo = rnd(0, Math.max(0, (100 - 20) / 10)) * 10;
+        view = { lo, hi: lo + 20, label:10, minJump:2, maxJump:9 };
+      }
+      view = Object.assign({}, view, { label:10 });
+      const at = rnd(view.lo + 1, view.hi - 1);
+      if (at % 10 === 0) continue;                    // already sitting on a ten
+      q = { task, v: at, answer: Math.round(at / 10) * 10, key:"lo" + at };
+    } else if (task === "read"){
+      const at = rnd(view.lo + 1, view.hi - 1);
+      // sitting on a numbered tick would just be reading the label
+      if (at % view.label === 0 && t < 70) continue;
+      q = { task, v: at, answer: at, key: "lr" + at };
+    } else {
+      const j = rnd(view.minJump, view.maxJump);
+      const back = Math.random() < .45;
+      const from = rnd(view.lo, view.hi - j);
+      const s0 = back ? from + j : from, e0 = back ? from : from + j;
+      q = { task, s: s0, e: e0, j, back, answer: task === "land" ? e0 : j, key: "l" + task + s0 + ">" + e0 };
+    }
+    if (seen.has(q.key) && t < 74) continue;
+    seen.add(q.key);
+    break;
+  }
+  return Object.assign({ kind:"line", view, ask: LINE_ASKS[q.task] }, q);
+}
+function lineText(q){
+  if (q.task === "round") return `${q.v} rounds to ${q.answer}`;
+  if (q.task === "read") return `the arrow points at ${q.v}`;
+  if (q.task === "land") return `${q.s} ${q.back ? "−" : "+"} ${q.j} = ${q.e}`;
+  return `${q.s} → ${q.e} is a jump of ${q.j}`;
+}
+
+function lineSVG(q){
+  const W = 640, arcs = q.task !== "read";
+  const H = arcs ? 132 : 104, baseY = arcs ? 96 : 60;
+  const padL = 30, padR = 30, v = q.view, span = v.hi - v.lo;
+  const X = n => padL + ((n - v.lo) / span) * (W - padL - padR);
+  let ticks = "";
+  for (let n = v.lo; n <= v.hi; n++){
+    const lab = n % v.label === 0, x = X(n).toFixed(1);
+    ticks += `<line x1="${x}" y1="${baseY - (lab ? 13 : 6)}" x2="${x}" y2="${baseY + (lab ? 13 : 6)}" `
+          +  `stroke="${lab ? "var(--ink-2)" : "var(--line)"}" stroke-width="${lab ? 3 : 1.8}" stroke-linecap="round"/>`;
+    if (lab) ticks += `<text x="${x}" y="${baseY + 32}" text-anchor="middle" font-family="Fredoka, sans-serif" `
+                   +  `font-size="17" font-weight="500" fill="var(--ink-2)">${n}</text>`;
+  }
+  // the line runs on past an edge only where there really are more numbers
+  let axis = `<line x1="${padL - 16}" y1="${baseY}" x2="${W - padR + 16}" y2="${baseY}" stroke="var(--ink-2)" stroke-width="3.2" stroke-linecap="round"/>`;
+  if (v.hi < 100) axis += `<path d="M${W - padR + 16} ${baseY} l-11 -6 v12 z" fill="var(--ink-2)"/>`;
+  if (v.lo > 0)   axis += `<path d="M${padL - 16} ${baseY} l11 -6 v12 z" fill="var(--ink-2)"/>`;
+  let art = "";
+  if (q.task === "read" || q.task === "round"){
+    const x = X(q.v).toFixed(1);
+    art = `<path d="M${x} ${baseY - 5} l-13 -20 h26 z" fill="var(--berry)"/>
+      <text x="${x}" y="${baseY - 32}" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="30" font-weight="600" fill="var(--berry)">?</text>`;
+  } else {
+    const xs = X(q.s), xe = X(q.e), mid = (xs + xe) / 2, top = baseY - 66;
+    art = `<path d="M${xs.toFixed(1)} ${baseY - 12} Q ${mid.toFixed(1)} ${top} ${xe.toFixed(1)} ${(baseY - 14).toFixed(1)}"
+        fill="none" stroke="var(--tangerine)" stroke-width="4" stroke-linecap="round"/>
+      <path d="M${xe.toFixed(1)} ${baseY - 5} l-8 -13 h16 z" fill="var(--tangerine)"/>
+      <circle cx="${xs.toFixed(1)}" cy="${baseY}" r="8" fill="var(--ocean)"/>
+      <text x="${xs.toFixed(1)}" y="${(baseY - 22).toFixed(1)}" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="20" font-weight="600" fill="var(--ocean)">${q.s}</text>
+      <text x="${mid.toFixed(1)}" y="${(top + 6).toFixed(1)}" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="25" font-weight="600" fill="var(--tangerine)">${q.task === "jump" ? "?" : (q.back ? "−" : "+") + q.j}</text>`;
+    art += q.task === "jump"
+      ? `<circle cx="${xe.toFixed(1)}" cy="${baseY}" r="8" fill="var(--ocean)"/>
+         <text x="${xe.toFixed(1)}" y="${(baseY + 32).toFixed(1)}" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="20" font-weight="600" fill="var(--ocean)">${q.e}</text>`
+      : `<text x="${xe.toFixed(1)}" y="${(baseY + 34).toFixed(1)}" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="26" font-weight="600" fill="var(--berry)">?</text>`;
+  }
+  return `<svg class="linefig" viewBox="0 0 ${W} ${H}" role="img" aria-label="${q.ask} Read it from the number line running from ${v.lo} to ${v.hi}.">${axis}${ticks}${art}</svg>`;
+}
+
+/* ---------- Zahlenmauer: the number wall ---------- */
+// Two neighbouring bricks add up to the brick resting on them. A gap at the top
+// is addition, a gap in the base is subtraction, and a gap in the middle makes
+// the child work out which of the two it needs — one picture, three skills.
+function buildWall(base){
+  const rows = [base.slice()];
+  while (rows[rows.length - 1].length > 1){
+    const below = rows[rows.length - 1], up = [];
+    for (let i = 0; i < below.length - 1; i++) up.push(below[i] + below[i + 1]);
+    rows.push(up);
+  }
+  return rows;                                    // rows[0] is the base
+}
+// Not every set of gaps can be solved. This walks the wall repeatedly, taking any
+// gap whose two partners are known, and returns the order they fall in — which is
+// both the proof that the wall is solvable and the order to ask the child in.
+function solveOrder(rows, gaps){
+  const known = new Set();
+  rows.forEach((row, r) => row.forEach((_, i) => { if (!gaps.has(r + "," + i)) known.add(r + "," + i); }));
+  const order = [];
+  let moved = true;
+  while (moved){
+    moved = false;
+    for (const key of gaps){
+      if (known.has(key)) continue;
+      const [r, i] = key.split(",").map(Number);
+      const up    = r > 0 && known.has((r-1) + "," + i) && known.has((r-1) + "," + (i+1));
+      const above = rows[r+1] || [];
+      const right = i < above.length            && known.has((r+1) + "," + i)     && known.has(r + "," + (i+1));
+      const left  = i > 0 && i - 1 < above.length && known.has((r+1) + "," + (i-1)) && known.has(r + "," + (i-1));
+      if (up || right || left){ known.add(key); order.push({ r, i }); moved = true; }
+    }
+  }
+  return order.length === gaps.size ? order : null;
+}
+
+// A wall spans as many questions as it has gaps: the child sees them all at once
+// and fills them one at a time, so every question still has a single answer.
+let wallState = null;
+function newWall(settings){
+  const r = Number(settings.wallRows), max = Number(settings.wallTo);
+  const weightSum = r === 3 ? 4 : r === 4 ? 8 : 16;
+  const cap = Math.max(2, Math.floor(max / weightSum) * 2);
+  let rows = null;
+  for (let t = 0; t < 160; t++){
+    const built = buildWall(Array.from({ length: r }, () => rnd(1, cap)));
+    const top = built[built.length - 1][0];
+    if (top > max || top < Math.floor(max / 3)) continue;
+    rows = built;
+    break;
+  }
+  if (!rows) rows = buildWall(Array.from({ length: r }, () => rnd(1, Math.max(2, cap))));
+
+  const cells = [];
+  rows.forEach((row, ri) => row.forEach((_, i) => cells.push({ r: ri, i })));
+  const want = r === 3 ? 2 : 3;          // as many gaps as the wall can carry and stay solvable
+  for (let t = 0; t < 200; t++){
+    const pool = cells.slice();
+    const gaps = new Set();
+    for (let k = 0; k < want; k++){
+      const c = pool.splice(Math.floor(Math.random() * pool.length), 1)[0];
+      gaps.add(c.r + "," + c.i);
+    }
+    const order = solveOrder(rows, gaps);
+    if (order) return { rows, queue: order };
+  }
+  return { rows, queue: [cells[Math.floor(Math.random() * cells.length)]] };   // one gap is always solvable
+}
+function makeWallQuestion(settings, seen){
+  if (!wallState || !wallState.queue.length) wallState = newWall(settings);
+  const b = wallState.queue.shift();
+  const rows = wallState.rows;
+  const open = new Set([b.r + "," + b.i, ...wallState.queue.map(g => g.r + "," + g.i)]);
+  const key = "w" + rows[0].join(",") + "#" + b.r + b.i;
+  seen.add(key);
+  return {
+    kind:"wall", rows, br:b.r, bi:b.i, gaps: open, answer: rows[b.r][b.i], key,
+    ask: b.r === rows.length - 1 && open.size === 1 ? "What goes in the top brick?"
+       : open.size > 1 ? "Fill in the next brick" : "Which brick is missing?"
+  };
+}
+function wallSVG(q, typed, state){
+  const BW = 104, BH = 48, G = 7, r = q.rows[0].length;
+  const W = r * BW + (r - 1) * G, H = r * BH + (r - 1) * G;
+  let out = "";
+  q.rows.forEach((row, ri) => {
+    const rowW = row.length * BW + (row.length - 1) * G;
+    const x0 = (W - rowW) / 2, y = H - (ri + 1) * BH - ri * G;
+    row.forEach((val, i) => {
+      const x = x0 + i * (BW + G);
+      const now = ri === q.br && i === q.bi;                 // the brick being answered
+      const later = !now && q.gaps.has(ri + "," + i);        // a gap still to come
+      const fill = now ? (state === "good" ? "color-mix(in srgb, var(--leaf) 22%, var(--surface))"
+                        : state === "bad" ? "color-mix(in srgb, var(--berry) 20%, var(--surface))"
+                        : "color-mix(in srgb, var(--berry) 10%, var(--surface))")
+                       : "var(--surface-2)";
+      const edge = now ? (state === "good" ? "var(--leaf)" : "var(--berry)") : "var(--line)";
+      out += `<rect x="${x}" y="${y}" width="${BW}" height="${BH}" rx="13" fill="${fill}" `
+          +  `stroke="${edge}" stroke-width="${now ? 3.5 : 2.5}"`
+          +  `${(now && !state) || later ? ' stroke-dasharray="9 6"' : ""}/>`;
+      const text = now ? (typed || "?") : later ? "?" : val;
+      const ink = now ? (state === "good" ? "var(--leaf)" : "var(--berry)") : later ? "var(--ink-3)" : "var(--ink)";
+      out += `<text x="${(x + BW / 2).toFixed(1)}" y="${(y + BH / 2 + 10).toFixed(1)}" text-anchor="middle" `
+          +  `font-family="Fredoka, sans-serif" font-size="27" font-weight="600" fill="${ink}">${text}</text>`;
+    });
+  });
+  return `<svg class="figart" viewBox="-3 -3 ${W + 6} ${H + 6}" role="img" aria-label="A number wall — two bricks add up to the brick above them. ${q.gaps.size} brick${q.gaps.size === 1 ? " is" : "s are"} missing.">${out}</svg>`;
+}
+
+/* ---------- Geld: euros and cents ---------- */
+// Amounts are held in cents all the way through; only the display splits them,
+// which is also how the child types - the last two digits are always the cents.
+const MONEY = [
+  { v:1,    kind:"coin", face:"1",    fill:"#C0763F", ring:"#8E5327" },
+  { v:2,    kind:"coin", face:"2",    fill:"#C0763F", ring:"#8E5327" },
+  { v:5,    kind:"coin", face:"5",    fill:"#C0763F", ring:"#8E5327" },
+  { v:10,   kind:"coin", face:"10",   fill:"#D6A62B", ring:"#9E7813" },
+  { v:20,   kind:"coin", face:"20",   fill:"#D6A62B", ring:"#9E7813" },
+  { v:50,   kind:"coin", face:"50",   fill:"#D6A62B", ring:"#9E7813" },
+  { v:100,  kind:"coin", face:"1 €",  fill:"#C6CCD4", ring:"#C9A227" },
+  { v:200,  kind:"coin", face:"2 €",  fill:"#C9A227", ring:"#C6CCD4" },
+  { v:500,  kind:"note", face:"5 €",  fill:"#B6BAC1", ring:"#8B9099" },
+  { v:1000, kind:"note", face:"10 €", fill:"#D4908C", ring:"#A5615D" },
+  { v:2000, kind:"note", face:"20 €", fill:"#93ADD6", ring:"#647FA8" },
+  { v:5000, kind:"note", face:"50 €", fill:"#E0AC72", ring:"#AC7A42" },
+  { v:10000,kind:"note", face:"100 €",fill:"#94C4A0", ring:"#5F9270" }
+];
+const PAY_WITH = [100, 200, 500, 1000, 2000, 5000, 10000];
+// Something to buy. A toy with a price tag and a hand holding out a note says
+// "it costs this, you pay that" without a sentence to read first — which is the
+// hard part of the question for a child who is still learning to read.
+const SHOP = ["🧸","⚽","🚗","📚","🍦","🎈","🪁","🤖","🥁","⛵","🧩","✏️","🎸","🦖","🍰","🎨","🛴","🪀"];
+const euro = c => Math.floor(c / 100) + "," + pad2(c % 100) + " €";   // 1,35 €
+const euroWhole = c => (c / 100) + " €";                              // 7 €
+// Whole euros are typed as euros; with cents on, the last two digits are the
+// cents. Which one applies is written on the question, not guessed at the keypad.
+const moneyText  = q => q.whole ? euroWhole(q.cents) : euro(q.cents);
+const moneyTyped = (q, t) => q.whole ? (t || "0") + " €" : euro(parseInt(t, 10) || 0);
+
+function makeMoneyQuestion(settings, seen){
+  const max = Number(settings.moneyTo);
+  const whole = settings.moneyCents !== "yes";
+  const step = whole ? 100 : 1;                      // the smallest coin in play
+  const digits = whole ? String(max / 100).length : String(max).length;
+  const dress = q => Object.assign(q, { kind:"money", whole, maxDigits: digits, keepZeros: !whole });
+  const task = settings.moneyTask === "mixed" ? pick(["count","change"]) : settings.moneyTask;
+
+  if (task === "change"){
+    for (let t = 0; t < 90; t++){
+      const price = rnd(Math.max(1, Math.round(max / 12 / step)), Math.floor((max - step) / step)) * step;
+      const paid = PAY_WITH.find(v => v > price && v <= max);
+      if (!paid) continue;
+      const key = "mc" + price + "/" + paid;
+      if (seen.has(key) && t < 84) continue;
+      seen.add(key);
+      const back = paid - price;
+      return dress({
+        task:"change", price, paid, cents: back, answer: whole ? back / 100 : back,
+        items: [MONEY.find(m => m.v === paid)],
+        toy: pick(SHOP), tag: whole ? euroWhole(price) : euro(price),
+        ask: "How much money comes back?",
+        key
+      });
+    }
+  }
+  const pool = MONEY.filter(m => m.v <= Math.max(step, Math.floor(max / 3)) && (!whole || m.v % 100 === 0));
+  let items = [], sum = 0;
+  for (let t = 0; t < 140; t++){
+    items = Array.from({ length: rnd(3, max >= 10000 ? 5 : 6) }, () => pick(pool));
+    sum = items.reduce((a, m) => a + m.v, 0);
+    if (sum > max || sum < step * 2) continue;
+    const key = "mn" + items.map(m => m.v).sort((a, b) => a - b).join(",");
+    if (seen.has(key) && t < 132) continue;
+    seen.add(key);
+    break;
+  }
+  items.sort((a, b) => b.v - a.v);
+  return dress({ task:"count", items, cents: sum, answer: whole ? sum / 100 : sum,
+                 ask:"How much money is this?", key:"mn" + sum + items.length });
+}
+
+function moneyPiece(m, cx, cy){
+  const R = 34, NW = 104, NH = 58;
+  if (m.kind === "coin"){
+    return `<circle cx="${cx}" cy="${cy}" r="${R}" fill="${m.ring}"/>`
+         + `<circle cx="${cx}" cy="${cy}" r="${R - 6}" fill="${m.fill}"/>`
+         + `<text x="${cx}" y="${cy + 8}" text-anchor="middle" font-family="Fredoka, sans-serif" `
+         + `font-size="${m.face.length > 2 ? 20 : 23}" font-weight="600" fill="#2A1A0B">${m.face}</text>`;
+  }
+  return `<rect x="${cx - NW / 2}" y="${cy - NH / 2}" width="${NW}" height="${NH}" rx="8" fill="${m.fill}" stroke="${m.ring}" stroke-width="3"/>`
+       + `<text x="${cx}" y="${cy + 9}" text-anchor="middle" font-family="Fredoka, sans-serif" `
+       + `font-size="${m.face.length > 4 ? 21 : 25}" font-weight="600" fill="#22262E">${m.face}</text>`;
+}
+const figCap = (x, y, t) => `<text x="${x}" y="${y}" text-anchor="middle" font-family="Nunito, sans-serif" `
+  + `font-size="18" font-weight="800" letter-spacing="1" fill="var(--ink-2)">${t}</text>`;
+
+// The shop: what you are buying with its price tag, and the money in your hand.
+function shopSVG(q){
+  const W = 470, H = 192, LX = 118, RX = 352;
+  const tagW = 108, tagH = 46, tagY = 108;
+  return `<svg class="figart wide" viewBox="0 0 ${W} ${H}" role="img"
+    aria-label="Something that costs ${q.tag}, and a ${q.items[0].face} to pay with. How much comes back?">
+    <text x="${LX}" y="84" text-anchor="middle" font-size="72">${q.toy}</text>
+    <line x1="${LX}" y1="86" x2="${LX - 32}" y2="${tagY + 4}" stroke="var(--ink-3)" stroke-width="2.5" stroke-linecap="round"/>
+    <rect x="${LX - tagW / 2}" y="${tagY}" width="${tagW}" height="${tagH}" rx="11"
+      fill="var(--sun)" stroke="var(--sun-d)" stroke-width="3"/>
+    <circle cx="${LX - tagW / 2 + 13}" cy="${tagY + tagH / 2}" r="4.5" fill="var(--sun-d)"/>
+    <text x="${LX + 8}" y="${tagY + 32}" text-anchor="middle" font-family="Fredoka, sans-serif"
+      font-size="25" font-weight="600" fill="#3A2A00">${q.tag}</text>
+    ${figCap(LX, 182, "COSTS")}
+    <line x1="235" y1="22" x2="235" y2="158" stroke="var(--line)" stroke-width="2.5" stroke-dasharray="7 7" stroke-linecap="round"/>
+    ${moneyPiece(q.items[0], RX, 66)}
+    <text x="${RX}" y="148" text-anchor="middle" font-size="50">✋</text>
+    ${figCap(RX, 182, "YOU PAY")}
+  </svg>`;
+}
+
+function moneySVG(q){
+  if (q.task === "change") return shopSVG(q);
+  const per = Math.min(4, q.items.length), NH = 58, G = 14;
+  const cell = Math.max(68, 104) + G;
+  const rowsN = Math.ceil(q.items.length / per);
+  const W = per * cell, H = rowsN * (NH + G) + 6;
+  let out = "";
+  q.items.forEach((m, i) => {
+    out += moneyPiece(m, (i % per) * cell + cell / 2, Math.floor(i / per) * (NH + G) + NH / 2 + 3);
+  });
+  return `<svg class="figart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${q.items.length} coins or notes">${out}</svg>`;
+}
+
 function makeQuestion(settings, seen){
+  if (settings.mode === "wall")  return makeWallQuestion(settings, seen);
+  if (settings.mode === "money") return makeMoneyQuestion(settings, seen);
   if (settings.mode === "clock") return makeClockQuestion(settings, seen);
+  if (settings.mode === "line")  return makeLineQuestion(settings, seen);
   const max = Number(settings.range);
   for (let tries = 0; tries < 60; tries++){
     const op = pick(settings.ops);
-    const f  = makeFact(op, max, settings.cross);
+    const f  = makeFact(op, max, settings.cross, settings.tables);
+    const unary = f[2] === null;
     const slot = settings.style === "answer"  ? 2
-               : settings.style === "missing" ? pick([0,1])
-               : pick([0,1,2]);
+               : settings.style === "missing" ? pick(unary ? [0] : [0,1])
+               : pick(unary ? [0,2] : [0,1,2]);
     const answer = slot === 0 ? f[0] : slot === 1 ? f[2] : f[3];
     if (answer === 0 && tries < 50) continue;            // "7 + _ = 7" teaches nothing
     const key = `${f[0]}${f[1]}${f[2]}#${slot}`;
@@ -898,7 +1799,18 @@ function makeQuestion(settings, seen){
   return { x:f[0], op:f[1], y:f[2], z:f[3], slot:2, answer:f[3], key:"fallback" };
 }
 function factText(q){
-  return q.kind === "clock" ? q.answer : `${q.x} ${q.op} ${q.y} = ${q.z}`;
+  if (q.kind === "clock") return q.task === "span"
+    ? `${fmtTime(q.h, q.m)} to ${fmtTime(q.eh, q.em)} is ${q.span} minutes`
+    : q.answer;
+  if (q.kind === "line") return lineText(q);
+  if (q.kind === "wall") return `the missing brick is ${q.answer}`;
+  if (UNARY[q.op]) return `${UNARY[q.op]} ${q.x} = ${q.z}`;
+  if (q.kind === "money"){
+    const f = q.whole ? euroWhole : euro;
+    return q.task === "change" ? `${f(q.paid)} − ${f(q.price)} = ${f(q.cents)}`
+                               : `that is ${f(q.cents)}`;
+  }
+  return `${q.x} ${q.op} ${q.y} = ${q.z}`;
 }
 
 /* ============================ setup screen ============================ */
@@ -913,7 +1825,17 @@ function renderPlayers(){
     b.setAttribute("aria-pressed", String(p.id === DB.active));
     b.innerHTML = `<span class="face">${p.face}</span><span></span>`;
     b.lastElementChild.textContent = p.name;
-    b.onclick = () => { DB.active = p.id; save(); renderPlayers(); paintCoins(); sndTap(); };
+    const best = bestPrize(p.id);
+    if (best){
+      const badge = document.createElement("span");
+      badge.className = "best";
+      badge.textContent = best.p.e;
+      badge.style.setProperty("--ring", best.t.ring);
+      badge.style.setProperty("--glow", best.t.glow);
+      badge.title = `${best.p.n} — ${best.t.name} ${best.t.kind}`;
+      b.append(badge);
+    }
+    b.onclick = () => { DB.active = p.id; save(); renderPlayers(); paintCoins(); paintBowl(); paintHeld(); sndTap(); };
     host.append(b);
   });
   const add = document.createElement("button");
@@ -924,20 +1846,19 @@ function renderPlayers(){
   host.append(add);
 }
 // A sandboxed page gets no prompt() or alert(), so the page has to ask for itself.
-let paFace = STICKERS[0].e;
+let paFace = FACES[0];
 function openAddPlayer(){
-  paFace = pick(STICKERS).e;
+  paFace = pick(FACES);
   $("#paName").value = "";
   const host = $("#paFaces");
   host.textContent = "";
-  STICKERS.forEach(st => {
+  FACES.forEach(f => {
     const b = document.createElement("button");
     b.type = "button";
-    b.textContent = st.e;
-    b.setAttribute("aria-label", st.name);
-    b.setAttribute("aria-pressed", String(st.e === paFace));
+    b.textContent = f;
+    b.setAttribute("aria-pressed", String(f === paFace));
     b.onclick = () => {
-      paFace = st.e;
+      paFace = f;
       host.querySelectorAll("button").forEach(o => o.setAttribute("aria-pressed", String(o === b)));
       sndTap();
     };
@@ -978,6 +1899,7 @@ function wireOpts(sel, key, multi){
       if (on && chosen.size === 1) return;       // always keep at least one
       on ? chosen.delete(val) : chosen.add(val);
       DB.settings.ops = [...chosen];
+      exampleCache.clear();
     } else {
       DB.settings[key] = key === "count" ? Number(val) : val;
     }
@@ -990,15 +1912,50 @@ const exampleCache = new Map();
 function exampleOf(range, op, cross){
   const key = range + op + cross;
   if (!exampleCache.has(key)){
-    const f = makeFact(op, Number(range), cross);
-    exampleCache.set(key, `${f[0]} ${f[1]} ${f[2]} = ${f[3]}`);
+    const f = makeFact(op, Number(range), cross, DB.settings.tables);
+    exampleCache.set(key, f[2] === null ? `${UNARY[f[1]]} ${f[0]} = ${f[3]}`
+                                        : `${f[0]} ${f[1]} ${f[2]} = ${f[3]}`);
   }
   return exampleCache.get(key);
 }
+$("#tableOpts").addEventListener("click", e => {
+  const b = e.target.closest(".opt");
+  if (!b) return;
+  sndTap();
+  const n = Number(b.dataset.table), chosen = new Set(DB.settings.tables);
+  if (chosen.has(n) && chosen.size === 1) return;        // always keep one row
+  chosen.has(n) ? chosen.delete(n) : chosen.add(n);
+  DB.settings.tables = [...chosen].sort((a, b2) => a - b2);
+  exampleCache.clear();
+  save(); paintOpts();
+});
+
 function paintOpts(){
   const s = DB.settings;
   document.querySelectorAll(".for-sum").forEach(e => { e.hidden = s.mode !== "sum"; });
   document.querySelectorAll(".for-clock").forEach(e => { e.hidden = s.mode !== "clock"; });
+  document.querySelectorAll(".for-line").forEach(e => { e.hidden = s.mode !== "line"; });
+  document.querySelectorAll(".for-wall").forEach(e => { e.hidden = s.mode !== "wall"; });
+  document.querySelectorAll(".for-money").forEach(e => { e.hidden = s.mode !== "money"; });
+  // the times tables only mean anything when × or ÷ is in play
+  const needsTables = s.mode === "sum" && (s.ops.includes("×") || s.ops.includes("÷"));
+  document.querySelectorAll(".for-tables").forEach(e => { e.hidden = !needsTables; });
+  $("#tableOpts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(s.tables.includes(Number(b.dataset.table)))));
+  if (needsTables){
+    const facts = new Set(mulFacts(Number(s.range), false, s.tables).map(f => f[0] + "x" + f[1])).size;
+    const thin = facts < 6;
+    $("#tableHint").className = "hint" + (thin ? " warn" : "");
+    $("#tableHint").textContent = thin
+      ? `Only ${facts} sums fit — try a bigger number size.`
+      : `${facts} different sums to practise.`;
+  }
+  [["#wallRowsOpts","wallRows"],["#wallToOpts","wallTo"],
+   ["#moneyToOpts","moneyTo"],["#moneyTaskOpts","moneyTask"],["#moneyCentsOpts","moneyCents"],
+   ["#clockTaskOpts","clockTask"]].forEach(([sel, key]) => {
+    $(sel).querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(b.dataset[key] === s[key])));
+  });
+  $("#lineToOpts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lineTo === s.lineTo)));
+  $("#lineTaskOpts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.lineTask === s.lineTask)));
   // the part of the day only decides anything on a 24-hour clock
   document.querySelectorAll(".for-24").forEach(e => { e.hidden = !(s.mode === "clock" && s.system === "24"); });
   $("#systemOpts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.system === s.system)));
@@ -1008,7 +1965,8 @@ function paintOpts(){
   const addSub = s.ops.includes("+") ? "+" : s.ops.includes("−") ? "−" : "+";
   $("#rangeOpts").querySelectorAll(".opt").forEach(b => {
     b.setAttribute("aria-pressed", String(b.dataset.range === s.range));
-    b.querySelector(".s").textContent = exampleOf(b.dataset.range, s.ops[0] || "+", s.cross === "mixed" ? "no" : s.cross);
+    const shownOp = s.ops.find(o => !UNARY[o]) || s.ops[0] || "+";
+    b.querySelector(".s").textContent = exampleOf(b.dataset.range, shownOp, s.cross === "mixed" ? "no" : s.cross);
   });
   $("#crossOpts").querySelectorAll(".opt").forEach(b => {
     b.setAttribute("aria-pressed", String(b.dataset.cross === s.cross));
@@ -1019,6 +1977,14 @@ function paintOpts(){
   $("#countOpts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.count) === s.count)));
 }
 wireOpts("#modeOpts", "mode", false);
+wireOpts("#wallRowsOpts", "wallRows", false);
+wireOpts("#wallToOpts", "wallTo", false);
+wireOpts("#moneyToOpts", "moneyTo", false);
+wireOpts("#moneyTaskOpts", "moneyTask", false);
+wireOpts("#moneyCentsOpts", "moneyCents", false);
+wireOpts("#clockTaskOpts", "clockTask", false);
+wireOpts("#lineToOpts", "lineTo", false);
+wireOpts("#lineTaskOpts", "lineTask", false);
 wireOpts("#systemOpts", "system", false);
 wireOpts("#minuteOpts", "minutes", false);
 wireOpts("#daypartOpts", "daypart", false);
@@ -1038,6 +2004,7 @@ function startRound(){
     seen: new Set(), misses: [], times: [], q: null, typed: "", t0: 0, locked: false, waiting: false, alive: true,
     settings: { ...s, ops: [...s.ops] }
   };
+  wallState = null;
   show("quiz");
   nextQuestion();
 }
@@ -1055,14 +2022,24 @@ function nextQuestion(){
   $("#qCount").textContent = `${S.i} / ${S.n}`;
   $("#fill").style.width = ((S.i - 1) / S.n * 100) + "%";
   setFace("idle");
-  say(S.q.kind === "clock" ? "What time is it?" : "Type your answer", "");
+  say(S.q.kind === "clock" ? (S.q.task === "span" ? "Count the minutes" : "What time is it?") : "Type your answer", "");
+  if (S.q.kind === "line") say("Read it off the line", "");
+  if (S.q.kind === "wall") say("Two bricks make the one above", "");
+  if (S.q.kind === "money") say("Type the cents — they fill in from the right", "");
+  catWatch();
 }
 function paintEq(state){
   const q = S.q, host = $("#eq");
   host.textContent = "";
   $("#clockHost").hidden = q.kind !== "clock";
+  const fig = q.kind === "line" || q.kind === "wall" || q.kind === "money";
+  $("#figHost").hidden = !fig;
+  $("#stage").classList.toggle("wide", fig);
   if (q.kind === "clock"){ host.className = "eq time"; paintClock(state); return; }
   host.className = "eq";
+  if (q.kind === "line"){ paintLine(state); return; }
+  if (q.kind === "wall"){ paintWall(state); return; }
+  if (q.kind === "money"){ paintMoney(state); return; }
   const cell = (val, idx) => {
     if (idx === q.slot){
       const b = document.createElement("span");
@@ -1075,27 +2052,81 @@ function paintEq(state){
     n.textContent = val;
     return n;
   };
-  const op  = document.createElement("span"); op.className  = "op";  op.textContent  = q.op;
   const eqs = document.createElement("span"); eqs.className = "eqs"; eqs.textContent = "=";
+  if (UNARY[q.op]){
+    const w = document.createElement("span"); w.className = "word"; w.textContent = UNARY[q.op];
+    host.append(w, cell(q.x, 0), eqs, cell(q.z, 2));
+    host.setAttribute("aria-label", `${UNARY[q.op]} ${q.slot === 0 ? "what" : q.x} equals ${q.slot === 2 ? "what" : q.z}`);
+    return;
+  }
+  const op = document.createElement("span"); op.className = "op"; op.textContent = q.op;
   host.append(cell(q.x, 0), op, cell(q.y, 1), eqs, cell(q.z, 2));
   host.setAttribute("aria-label", `${q.slot === 0 ? "what" : q.x} ${q.op} ${q.slot === 1 ? "what" : q.y} equals ${q.slot === 2 ? "what" : q.z}`);
 }
 function paintClock(state){
   const q = S.q, t = S.typed, host = $("#eq");
-  $("#daypart").hidden = q.twelve;                 // only a 24-hour face needs the hint
-  if (!q.twelve){
+  const span = q.task === "span";
+  $("#daypart").hidden = q.twelve || span;      // only a 24-hour face needs the hint
+  if (!q.twelve && !span){
     const part = dayPartOf(q.h);
     $("#daypart").textContent = `${part.icon} ${part.label}`;
   }
-  $("#clockFace").innerHTML = clockSVG(q.h, q.m);
+  $("#clockPrompt").hidden = !q.ask;
+  if (q.ask) $("#clockPrompt").textContent = q.ask;
+  $("#clockFace").innerHTML = span
+    ? `<div class="clockpair">
+         <figure>${clockSVG(q.h, q.m)}<figcaption>from</figcaption></figure>
+         <span class="clockarrow" aria-hidden="true">→</span>
+         <figure>${clockSVG(q.eh, q.em)}<figcaption>to</figcaption></figure>
+       </div>`
+    : clockSVG(q.h, q.m, q.task === "later" ? q.span : 0);
+  const chip = $("#spanChip");
+  chip.hidden = q.task !== "later";
+  if (q.task === "later") chip.textContent = `+ ${q.span} minutes`;
   const box = document.createElement("span");
-  box.className = "slot time" + (t ? " filled" : "") + (state ? " " + state : "");
-  if (t) box.textContent = showTyped(t);
-  else { box.innerHTML = '<span class="ph">•:••</span>'; }
+  box.className = "slot" + (span ? "" : " time") + (t ? " filled" : "") + (state ? " " + state : "");
+  if (t) box.textContent = span ? t : showTyped(t);
+  else box.innerHTML = span ? '<span class="caret"></span>' : '<span class="ph">•:••</span>';
   host.append(box);
-  host.setAttribute("aria-label", q.twelve
+  if (span){
+    const mins = document.createElement("span");
+    mins.className = "word"; mins.textContent = "minutes";
+    host.append(mins);
+  }
+  host.setAttribute("aria-label", q.ask || (q.twelve
     ? "What time is it? Type the hour, then the minutes."
-    : `What time is it? It is ${dayPartOf(q.h).label}. Type the hour, then the minutes.`);
+    : `What time is it? It is ${dayPartOf(q.h).label}. Type the hour, then the minutes.`));
+}
+
+function paintLine(state){
+  const q = S.q, host = $("#eq");
+  $("#figPrompt").textContent = q.ask;
+  $("#figArt").innerHTML = lineSVG(q);
+  const box = document.createElement("span");
+  box.className = "slot" + (S.typed ? " filled" : "") + (state ? " " + state : "");
+  if (S.typed) box.textContent = S.typed;
+  else box.innerHTML = '<span class="caret"></span>';
+  host.append(box);
+  host.setAttribute("aria-label", q.ask);
+}
+
+// The wall takes its answer in the brick itself, so there is no separate box.
+function paintWall(state){
+  const q = S.q;
+  $("#figPrompt").textContent = q.ask;
+  $("#figArt").innerHTML = wallSVG(q, S.typed, state);
+  $("#eq").setAttribute("aria-label", q.ask);
+}
+function paintMoney(state){
+  const q = S.q, host = $("#eq");
+  $("#figPrompt").textContent = q.ask;
+  $("#figArt").innerHTML = moneySVG(q);
+  const box = document.createElement("span");
+  box.className = "slot cash" + (S.typed ? " filled" : "") + (state ? " " + state : "");
+  if (S.typed) box.textContent = moneyTyped(q, S.typed);
+  else box.innerHTML = `<span class="ph">${q.whole ? "— €" : "0,00 €"}</span>`;
+  host.append(box);
+  host.setAttribute("aria-label", q.ask);
 }
 
 function say(text, kind){ const el = $("#say"); el.textContent = text; el.className = "say" + (kind ? " " + kind : ""); }
@@ -1104,18 +2135,64 @@ const MOUTHS = {
   idle:  "M52 88 q8 7 16 0",
   happy: "M46 84 q14 16 28 0",
   oops:  "M52 92 q8 -8 16 0",
-  wow:   "M54 84 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0"
+  wow:   "M54 84 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0",
+  sleep: "M56 90 q4 3 8 0"
 };
 function setFace(kind){
   const m = $("#mascot");
   $("#mouth").setAttribute("d", MOUTHS[kind] || MOUTHS.idle);
-  m.classList.remove("hop", "shake");
+  m.classList.remove("hop", "shake", "look", "tilt", "yawn", "sleep");
   void m.offsetWidth;
   if (kind === "happy" || kind === "wow") m.classList.add("hop");
   if (kind === "oops") m.classList.add("shake");
 }
 
+/* The cat gets bored while a question sits unanswered: it looks around, then
+   meows, then yawns and dozes off. Any key wakes it and starts the clock over.
+   Purely for show - the answer time is measured the same as always. */
+const MEOWS = ["Meow?", "Mrrrow?", "Purr…", "Meow!"];
+let boredTimers = [], purrTimer = null;
+const answering = () => S && S.alive && !S.locked && !S.waiting && !$("#quiz").hidden;
+function catClear(){
+  const m = $("#mascot");
+  m.classList.remove("look", "tilt", "yawn", "sleep");
+  $("#purr").classList.remove("on");
+}
+function catMeow(text){
+  const el = $("#purr");
+  el.textContent = text;
+  el.classList.add("on");
+  clearTimeout(purrTimer);
+  purrTimer = setTimeout(() => el.classList.remove("on"), 2200);
+  // Heard at most once a round; after that the cat only meows in its bubble.
+  if (!S.meowed){ S.meowed = true; sndMeow(); }
+}
+function catStop(){
+  boredTimers.forEach(clearTimeout);
+  boredTimers = [];
+  const wasAsleep = $("#mascot").classList.contains("sleep");
+  catClear();
+  return wasAsleep;
+}
+function catWatch(){
+  catStop();
+  const at = (secs, fn) => boredTimers.push(setTimeout(() => { if (answering()) fn(); }, secs * 1000));
+  const m = $("#mascot");
+  at(10, () => { catClear(); void m.offsetWidth; m.classList.add("look"); });
+  at(18, () => { catClear(); void m.offsetWidth; m.classList.add("tilt"); if (!document.hidden) catMeow(pick(MEOWS)); });
+  at(28, () => { catClear(); void m.offsetWidth; m.classList.add("yawn"); });
+  at(30.2, () => { catClear(); $("#mouth").setAttribute("d", MOUTHS.sleep); m.classList.add("sleep"); });
+}
+// Called on every key. A sleeping cat jumps awake before settling back down.
+function catNudge(){
+  const wasAsleep = catStop();
+  if (wasAsleep){ setFace("wow"); setTimeout(() => { if (answering()) setFace("idle"); }, 600); }
+  else if ($("#mouth").getAttribute("d") !== MOUTHS.idle && answering()) setFace("idle");
+  if (answering()) catWatch();
+}
+
 function typeKey(k){
+  catNudge();
   if (S.waiting){                      // showing the right answer — only ✓ moves on
     if (k === "ok"){ S.waiting = false; advance(); }
     return;
@@ -1123,9 +2200,8 @@ function typeKey(k){
   if (S.locked) return;
   if (k === "del"){ S.typed = S.typed.slice(0, -1); sndTap(); paintEq(); return; }
   if (k === "ok"){ submit(); return; }
-  const clock = S.q.kind === "clock";
-  if (S.typed.length >= (clock ? 4 : 3)) return;
-  if (!clock && S.typed === "0") S.typed = "";     // 07 is just 7, but 07:30 is not
+  if (S.typed.length >= (S.q.maxDigits || 3)) return;
+  if (!S.q.keepZeros && S.typed === "0") S.typed = "";   // 7 not 07 — but 07:30 keeps its zero
   S.typed += k;
   sndTap();
   paintEq();
@@ -1137,17 +2213,20 @@ const STREAKS = ["Three in a row!","On fire!","Unstoppable!","Wow, keep going!"]
 function submit(){
   if (S.locked || S.typed === "") return;
   const q = S.q;
-  const asTime = q.kind === "clock" ? parseTypedTime(S.typed) : null;
-  if (q.kind === "clock" && !asTime){
+  const timed = isTimeQ(q);
+  const asTime = timed ? parseTypedTime(S.typed) : null;
+  if (timed && !asTime){
     say("Type the hour and both minute numbers", "bad");
     return;
   }
-  const right = q.kind === "clock" ? (asTime.h === q.h && asTime.m === q.m)
-                                   : parseInt(S.typed, 10) === q.answer;
-  const shown = q.kind === "clock" ? showTyped(S.typed) : S.typed;
+  const right = timed ? (asTime.h === q.ansH && asTime.m === q.ansM)
+                      : parseInt(S.typed, 10) === q.answer;
+  const shown = timed ? showTyped(S.typed)
+              : q.kind === "money" ? moneyTyped(q, S.typed) : S.typed;
   const secs = (performance.now() - S.t0) / 1000;
   S.times.push(secs);
   S.locked = true;
+  catStop();
 
   if (right){
     S.right++; S.streak++; S.best = Math.max(S.best, S.streak);
@@ -1169,14 +2248,14 @@ function submit(){
     sndWrong();
     $("#bubble").classList.add("buzz");
     setTimeout(() => $("#bubble").classList.remove("buzz"), 450);
-    const solution = q.answer;
+    const solution = q.kind === "money" ? moneyText(q) : q.answer;
     say(`Not quite — the answer is ${solution}`, "bad");
     // Fill the right answer in, then wait for the child instead of moving on by
     // itself. The short delay first stops a key that was already on its way
     // down from skipping past the answer unseen.
     setTimeout(() => {
       if (!S || !S.alive) return;
-      S.typed = q.kind === "clock" ? q.digits : String(q.answer);
+      S.typed = isTimeQ(q) ? q.digits : String(q.answer);
       paintEq("good");
       S.waiting = true;
       say(`${factText(q)} — press ✓ when you have had a look`, "bad");
@@ -1211,7 +2290,11 @@ function finish(){
     mode: S.settings.mode,
     ops: S.settings.mode === "clock" ? "clock" : S.settings.ops.join(""),
     range: S.settings.range, style: S.settings.style, cross: S.settings.cross,
-    minutes: S.settings.minutes, daypart: S.settings.daypart, system: S.settings.system
+    minutes: S.settings.minutes, daypart: S.settings.daypart, system: S.settings.system,
+    lineTo: S.settings.lineTo, lineTask: S.settings.lineTask,
+    wallRows: S.settings.wallRows, wallTo: S.settings.wallTo,
+    moneyTo: S.settings.moneyTo, moneyTask: S.settings.moneyTask,
+    moneyCents: S.settings.moneyCents, clockTask: S.settings.clockTask
   });
   save();
 
@@ -1230,11 +2313,14 @@ function finish(){
   $("#rTime").textContent  = avg.toFixed(1) + "s";
   $("#rCoins").textContent = "+" + S.coins;
 
-  const before = Math.floor(coinsBefore / PER_STICKER), after = Math.floor(st.coins / PER_STICKER);
+  const before = prizesFor(coinsBefore), after = prizesFor(st.coins);
+  const won = [];
+  for (let i = before; i < after; i++) won.push(i);
+  packCrate(treatsEarned(st.coins) - treatsEarned(coinsBefore), won);
+
   $("#stickerRow").textContent = "";
-  if (after > before){
-    $("#stickerHead").innerHTML = 'New sticker! <small>tap to see it big</small>';
-    for (let i = before; i < after; i++) $("#stickerRow").append(stickerButton(i, false, true));
+  if (after >= PRIZES.length){
+    $("#stickerHead").innerHTML = 'All 36 stickers! <small>Numo is very impressed</small>';
   } else {
     $("#stickerHead").textContent = "Next sticker";
     $("#stickerRow").append(stickerButton(after, true, false));
@@ -1255,9 +2341,11 @@ function finish(){
   } else mp.hidden = true;
 
   paintCoins();
+  paintBowl();
+  paintHeld();
   show("result");
   sndDone();
-  if (stars >= 2) confetti();
+  if (stars >= 2 && !crateQueue.length) confetti();   // the crate brings its own
 }
 
 /* ============================ confetti ============================ */
@@ -1293,16 +2381,28 @@ function confetti(){
 function renderProgress(){
   const p = me(), st = statsOf(p.id), h = histOf(p.id);
   $("#progTitle").textContent = `${p.name}'s progress`;
+  const best = bestPrize(p.id), bh = $("#bestPrize");
+  bh.hidden = !best;
+  if (best){
+    bh.innerHTML = `<span class="best big-best"></span><span><b></b><em></em></span>`;
+    const chip = bh.firstElementChild;
+    chip.textContent = best.p.e;
+    chip.style.setProperty("--ring", best.t.ring);
+    chip.style.setProperty("--glow", best.t.glow);
+    bh.querySelector("b").textContent = best.p.n;
+    bh.querySelector("em").textContent = `${best.t.name} ${best.t.kind}`;
+  }
   $("#pQ").textContent = st.questions;
   $("#pAcc").textContent = h.length ? Math.round(h.reduce((a, r) => a + r.acc, 0) / h.length) + "%" : "—";
   $("#pStreak").textContent = st.bestStreak;
   $("#pCoins").textContent = st.coins;
+  $("#pTreats").textContent = pantryOf(p.id);
 
   const earned = earnedCount();
   const sh = $("#allStickers");
   sh.textContent = "";
   for (let i = 0; i < earned; i++) sh.append(stickerButton(i, false, false));
-  sh.append(stickerButton(earned, true, false));          // the one coming next
+  if (earned < PRIZES.length) sh.append(stickerButton(earned, true, false));   // the one coming next
   renderCoinBar($("#collectionBar"));
 
   drawChart(h.slice(-14));
@@ -1319,8 +2419,24 @@ function renderProgress(){
                    d.toLocaleTimeString(undefined, { hour:"2-digit", minute:"2-digit" });
       const add = (cls, text) => { const e = document.createElement("span"); e.className = cls; e.textContent = text; li.append(e); };
       add("when", when);
-      if (r.mode === "clock"){
+      if (r.mode === "wall"){
+        add("pill", "🧱 wall");
+        add("pill", (r.wallRows || 3) + " rows");
+        add("pill", "to " + (r.wallTo || 20));
+      } else if (r.mode === "money"){
+        add("pill", "💶 money");
+        add("pill", "to " + Math.floor(Number(r.moneyTo || 1000) / 100) + " €");
+        if (r.moneyCents === "yes") add("pill", "with cents");
+        add("pill", r.moneyTask === "change" ? "change" : r.moneyTask === "mixed" ? "mixed" : "count it");
+      } else if (r.mode === "line"){
+        add("pill", "📏 line");
+        add("pill", "0–" + (r.lineTo || "10"));
+        add("pill", { read:"read it", land:"jump", jump:"how far", mixed:"mixed" }[r.lineTask] || "mixed");
+      } else if (r.mode === "clock"){
         add("pill", "🕐 clock");
+        if (r.clockTask === "later") add("pill", "later");
+        else if (r.clockTask === "span") add("pill", "how long");
+        else if (r.clockTask === "mixed") add("pill", "mixed");
         add("pill", { hour:"o'clock", half:"half", quarter:"quarters", five:"fives", any:"any minute" }[r.minutes] || "clock");
         add("pill", (r.system || "24") + "h");
         if (r.system === "24" && r.daypart === "later") add("pill", "afternoon");
@@ -1373,39 +2489,325 @@ function drawChart(rows){
     ${g}${bars}<line class="grid" x1="${L}" y1="${T + ih}" x2="${W - R}" y2="${T + ih}"/></svg>`;
 }
 
+/* ---------- what Numo is carrying ---------- */
+// A sticker you can only look at is a poor prize, so it can be handed over. Numo
+// keeps it through the next questions; a treat makes him put it down to eat.
+const heldOf = id => {
+  const i = statsOf(id).holding;
+  return Number.isInteger(i) && i < prizesFor(statsOf(id).coins) ? i : null;
+};
+function paintHeld(){
+  const i = heldOf(me().id), on = i !== null;
+  ["#heldQuiz", "#heldBowl"].forEach(sel => {
+    const el = $(sel);
+    el.hidden = !on;
+    if (!on) return;
+    el.textContent = prizeOf(i).e;
+  });
+}
+function flashHeld(){
+  paintHeld();
+  ["#heldQuiz", "#heldBowl"].forEach(sel => {
+    const el = $(sel);
+    el.classList.remove("fresh"); void el.offsetWidth; el.classList.add("fresh");
+  });
+}
+function giveToNumo(){
+  const st = statsOf(me().id);
+  if (svIndex >= earnedCount()) return;
+  if (st.holding === svIndex){                    // already his — take it back
+    st.holding = null; save(); paintHeld(); paintSticker();
+    toast(`Numo gives the ${prizeOf(svIndex).n} back`);
+    return;
+  }
+  st.holding = svIndex;
+  save();
+  const art = $("#svArt");
+  art.classList.remove("given"); void art.offsetWidth; art.classList.add("given");
+  sndRight();
+  const name = prizeOf(svIndex).n;
+  setTimeout(() => {
+    art.classList.remove("given");
+    closeSticker();
+    flashHeld();
+    toast(`Numo has the ${name}!`);
+  }, 430);
+}
+$("#giveBtn").onclick = () => { sndTap(); giveToNumo(); };
+
+/* ---------- the crate ---------- */
+// What a round earned used to just appear in the totals. Now it is packed into a
+// crate the child opens, and the contents come out one at a time — treats first
+// so a sticker, when there is one, lands last.
+let crateQueue = [], crateBusy = false, crateTimers = [];
+function laterInCrate(fn, ms){ crateTimers.push(setTimeout(fn, ms)); }
+// A treat joins the tin as it comes out of the crate, not before — otherwise the
+// loot is sitting in plain sight while the child is still deciding to tap.
+function bankItem(x){
+  if (x.done) return false;
+  x.done = true;
+  if (x.kind !== "treat") return false;
+  tinOf(me().id).push(x.e);
+  return true;
+}
+// ...but nothing may be lost either, so leaving with a crate unopened banks it.
+function flushCrate(){
+  crateTimers.forEach(clearTimeout); crateTimers = [];
+  if (!crateQueue.length) return;
+  let moved = false;
+  crateQueue.forEach(x => { if (bankItem(x)) moved = true; });
+  crateQueue = [];
+  crateBusy = false;
+  const box = $("#crateBox");
+  box.hidden = true;
+  box.classList.remove("spent", "open"); box.classList.add("shut");
+  if (moved) save();
+  paintBowl();
+}
+function packCrate(newTreats, newStickers){
+  flushCrate();                                   // anything still pending is banked first
+  crateQueue = [];
+  for (let i = 0; i < newTreats; i++) crateQueue.push({ kind:"treat", e: pick(TREATS) });
+  newStickers.forEach(i => crateQueue.push({ kind:"sticker", i }));
+  const box = $("#crateBox");
+  box.hidden = crateQueue.length === 0;
+  box.classList.remove("open", "spent"); box.classList.add("shut");
+  $("#lootRow").textContent = "";
+  $("#bowlHead").innerHTML = crateQueue.length
+    ? 'A crate for you! <small>tap it open</small>'
+    : "Numo's bowl <small>drag a treat up to Numo</small>";
+  crateBusy = false;
+  paintBowl();
+}
+function openCrate(){
+  if (crateBusy || !crateQueue.length) return;
+  crateBusy = true;
+  const box = $("#crateBox");
+  box.classList.remove("shut"); box.classList.add("open");
+  const burst = $("#crateBurst");
+  burst.classList.remove("on"); void burst.offsetWidth; burst.classList.add("on");
+  beep([320, 210], .12, "square", .07);
+  const items = crateQueue.slice();
+  items.forEach((item, k) => laterInCrate(() => revealOne(item, k === items.length - 1), 380 + k * 560));
+}
+function revealOne(item, last){
+  const fig = document.createElement("figure");
+  const art = document.createElement("span");
+  art.className = "art";
+  const tag = document.createElement("span");
+  tag.className = "tag";
+  if (item.kind === "treat"){
+    art.textContent = item.e;
+    tag.textContent = "treat";
+    beep([760, 1010], .09, "triangle", .1);
+    bankItem(item); save(); paintBowl();          // it lands in the tin as it appears
+  } else {
+    fig.className = "star";
+    fig.style.setProperty("--ring", tierOf(item.i).ring);
+    fig.style.setProperty("--glow", tierOf(item.i).glow);
+    art.textContent = prizeOf(item.i).e;
+    tag.textContent = prizeOf(item.i).n;
+    sndDone();
+    confetti();
+  }
+  fig.append(art, tag);
+  $("#lootRow").append(fig);
+  if (last){
+    const t = crateQueue.filter(x => x.kind === "treat").length;
+    const p = crateQueue.filter(x => x.kind === "sticker").length;
+    const bits = [];
+    if (t) bits.push(t + (t === 1 ? " treat" : " treats"));
+    if (p) bits.push(p + (p === 1 ? " sticker" : " stickers"));
+    $("#bowlHead").textContent = bits.join(" and ") + "!";
+    // a beat to look at what came out, then it fades and folds away
+    laterInCrate(() => $("#crateBox").classList.add("spent"), 900);
+    laterInCrate(() => {
+      const box = $("#crateBox");
+      box.hidden = true;
+      box.classList.remove("spent");
+      crateQueue = [];
+      paintBowl();
+    }, 1540);
+  }
+}
+$("#crateBox").addEventListener("click", () => openCrate());
+$("#crateBox").addEventListener("keydown", e => {
+  if (e.key === "Enter" || e.key === " "){ e.preventDefault(); openCrate(); }
+});
+
+/* ---------- feeding Numo ---------- */
+// What each treat sounds like, and what he says about it.
+const TREAT_SOUND = {
+  "🥛":"slurp", "🍪":"crunch", "🥨":"crunch", "🍉":"crunch",
+  "🐟":"meow", "🍤":"meow", "🥓":"meow", "🍗":"meow", "🥚":"meow",
+  "🧀":"purr", "🍚":"purr", "🍯":"purr"
+};
+const NOMS_BY = {
+  slurp:  ["Slurp!", "Lap lap…", "Mmmm!"],
+  crunch: ["Crunch!", "Crrrunch!", "Munch munch!"],
+  meow:   ["Nom nom!", "Meow!", "Yum!", "More?"],
+  purr:   ["Purrr…", "Mmmm…", "Prrrp!"]
+};
+let bowlSayTimer = null;
+function paintBowl(){
+  const tin = tinOf(me().id), left = tin.length;
+  $("#treatCount").textContent = left;
+  $("#treatWord").textContent = left === 1 ? "treat" : "treats";
+  const host = $("#tin");
+  host.textContent = "";
+  host.classList.toggle("empty", left === 0);
+  if (!left){
+    const p = document.createElement("p");
+    p.className = "tinempty";
+    p.textContent = "No treats yet — finish a round to get some.";
+    host.append(p);
+    return;
+  }
+  // Two of the same treat is one picture with a little 2 on it, not two pictures.
+  // Kept in TREATS order so the tin does not reshuffle itself as they are eaten.
+  const counts = new Map();
+  tin.forEach(f => counts.set(f, (counts.get(f) || 0) + 1));
+  TREATS.filter(f => counts.has(f)).forEach(food => {
+    const n = counts.get(food);
+    const b = document.createElement("button");
+    b.type = "button";
+    const face = document.createElement("span");
+    face.className = "face";
+    face.textContent = food;
+    b.append(face);
+    if (n > 1){
+      const tag = document.createElement("span");
+      tag.className = "count";
+      tag.textContent = n;
+      b.append(tag);
+    }
+    b.setAttribute("aria-label", n > 1 ? `Feed Numo one of your ${n}` : "Feed this treat to Numo");
+    b.addEventListener("pointerdown", e => liftTreat(e, b, food));
+    host.append(b);
+  });
+}
+
+function feedNumo(food){
+  const st = statsOf(me().id), tin = tinOf(me().id);
+  const at = tin.indexOf(food);
+  if (at < 0) return;                             // not in the tin — nothing to give
+  tin.splice(at, 1);
+  st.fed = (st.fed || 0) + 1;
+  st.holding = null;                              // paws full — he puts the toy down
+  save();
+  paintHeld();
+  const kind = TREAT_SOUND[food] || "meow";
+  const bite = $("#bowlFood"), cat = $("#bowlCat"), say = $("#bowlSay");
+  bite.textContent = food;
+  bite.classList.remove("fly"); cat.classList.remove("chomp");
+  void bite.offsetWidth;
+  bite.classList.add("fly"); cat.classList.add("chomp");
+  say.textContent = pick(NOMS_BY[kind]);
+  say.classList.add("on");
+  clearTimeout(bowlSayTimer);
+  bowlSayTimer = setTimeout(() => say.classList.remove("on"), 1700);
+  if (kind === "crunch") sndCrunch();
+  else if (kind === "slurp") sndSlurp();
+  else if (kind === "purr") sndPurr();
+  else sndMeow(.9 + Math.random() * .3);
+  paintBowl();
+}
+
+/* ---------- dragging a treat to Numo ---------- */
+// Pointer events rather than HTML5 drag-and-drop, which barely works on a tablet.
+// A plain tap feeds too, so a small child who cannot drag is never stuck.
+let ghost = null, ghostFood = null, ghostFrom = null, ghostAt = null, ghostMoved = 0;
+function liftTreat(e, btn, food){
+  if (btn.disabled || ghost) return;
+  e.preventDefault();
+  ghostFood = food; ghostFrom = btn; ghostMoved = 0;
+  ghostAt = { x: e.clientX, y: e.clientY };
+  ghost = document.createElement("div");
+  ghost.className = "ghost";
+  ghost.textContent = food;
+  document.body.append(ghost);
+  moveGhost(e.clientX, e.clientY);
+  btn.classList.add("lifted");
+  try { btn.setPointerCapture(e.pointerId); } catch {}
+  btn.addEventListener("pointermove", dragTreat);
+  btn.addEventListener("pointerup", dropTreat);
+  btn.addEventListener("pointercancel", dropTreat);
+}
+function moveGhost(x, y){ if (ghost){ ghost.style.left = x + "px"; ghost.style.top = y + "px"; } }
+function dragTreat(e){
+  if (!ghost) return;
+  ghostMoved += Math.abs(e.clientX - ghostAt.x) + Math.abs(e.clientY - ghostAt.y);
+  ghostAt = { x: e.clientX, y: e.clientY };
+  moveGhost(e.clientX, e.clientY);
+  const over = onNumo(e.clientX, e.clientY);
+  $("#bowlCat").style.transform = over ? "scale(1.16)" : "";
+}
+function onNumo(x, y){
+  const r = $("#catDrop").getBoundingClientRect();
+  const pad = 22;
+  return x >= r.left - pad && x <= r.right + pad && y >= r.top - pad && y <= r.bottom + pad;
+}
+function dropTreat(e){
+  const btn = ghostFrom, food = ghostFood;
+  if (btn){
+    btn.classList.remove("lifted");
+    btn.removeEventListener("pointermove", dragTreat);
+    btn.removeEventListener("pointerup", dropTreat);
+    btn.removeEventListener("pointercancel", dropTreat);
+  }
+  if (ghost){ ghost.remove(); ghost = null; }
+  $("#bowlCat").style.transform = "";
+  const tap = ghostMoved < 10;                    // never dragged — count it as a tap
+  ghostFood = ghostFrom = null;
+  if (e.type !== "pointercancel" && (tap || onNumo(e.clientX, e.clientY))) feedNumo(food);
+}
+
 /* ---------- tap a sticker to see it big ---------- */
-const earnedCount = () => Math.floor(statsOf(me().id).coins / PER_STICKER);
+const earnedCount = () => prizesFor(statsOf(me().id).coins);
+const bestPrize = id => { const k = prizesFor(statsOf(id).coins); return k ? { p: prizeOf(k - 1), t: tierOf(k - 1) } : null; };
 
 function stickerButton(i, locked, isNew){
   const b = document.createElement("button");
   b.type = "button";
   b.className = "sticker" + (locked ? " locked" : "") + (isNew ? " new" : "");
   b.dataset.i = i;
-  b.textContent = locked ? "?" : stickerAt(i).e;
-  b.setAttribute("aria-label", locked ? "Sticker not earned yet" : `${stickerAt(i).name} sticker, tap to see it bigger`);
+  if (!locked){
+    const t = tierOf(i);
+    b.style.setProperty("--ring", t.ring);
+    b.style.setProperty("--glow", t.glow);
+    b.classList.add("won");
+  }
+  b.textContent = locked ? "?" : prizeOf(i).e;
+  b.setAttribute("aria-label", locked ? "Not earned yet"
+    : `${prizeOf(i).n}, a ${tierOf(i).name} ${tierOf(i).kind}. Tap to see it bigger.`);
   b.onclick = () => { sndTap(); openSticker(i); };
   return b;
 }
 
 // How close is this child to the next sticker?
 function renderCoinBar(host){
-  const coins = statsOf(me().id).coins;
-  const into = coins % PER_STICKER, togo = PER_STICKER - into;
+  const coins = statsOf(me().id).coins, earned = prizesFor(coins);
+  // Every sticker won: the bar turns to the treats, which never run out.
+  const done = earned >= PRIZES.length;
+  const from = done ? treatsEarned(coins) * TREAT_COST : earned ? THRESH[earned - 1] : 0;
+  const to   = done ? from + TREAT_COST : THRESH[earned];
+  const into = coins - from, need = to - from, togo = to - coins;
+  const what = done ? "treat" : tierOf(earned).kind;
   host.textContent = "";
   const track = document.createElement("div");
   track.className = "track coin";
   track.setAttribute("role", "img");
-  track.setAttribute("aria-label", `${into} of ${PER_STICKER} coins towards the next sticker`);
+  track.setAttribute("aria-label", `${into} of ${need} coins towards the next ${tierOf(earned).kind}`);
   const fill = document.createElement("div");
   fill.className = "fill";
   track.append(fill);
   const note = document.createElement("p");
   note.className = "coin-note";
-  note.innerHTML = "<b></b> more coins to the next sticker";
+  note.innerHTML = "<b></b> more coins to the next " + what;
   note.firstElementChild.textContent = togo;
-  if (togo === 1) note.lastChild.textContent = " more coin to the next sticker";
+  if (togo === 1) note.lastChild.textContent = " more coin to the next " + what;
   host.append(track, note);
-  requestAnimationFrame(() => { fill.style.width = (into / PER_STICKER * 100) + "%"; });
+  requestAnimationFrame(() => { fill.style.width = (into / need * 100) + "%"; });
 }
 
 let svIndex = 0, svReturn = null;
@@ -1425,16 +2827,21 @@ function svStep(d){
   paintSticker();
 }
 function paintSticker(){
-  const earned = earnedCount(), coins = statsOf(me().id).coins;
-  const locked = svIndex >= earned, at = (svIndex + 1) * PER_STICKER;
-  $("#svArt").classList.toggle("locked", locked);
-  $("#svArt").textContent = locked ? "?" : stickerAt(svIndex).e;
-  $("#svName").textContent = locked ? "Not yet!" : stickerAt(svIndex).name;
+  const earned = earnedCount();
+  const locked = svIndex >= earned, t = tierOf(svIndex), art = $("#svArt");
+  art.classList.toggle("locked", locked);
+  art.style.setProperty("--ring", locked ? "var(--line)" : t.ring);
+  art.style.setProperty("--glow", locked ? "var(--surface-2)" : t.glow);
+  art.textContent = locked ? "?" : prizeOf(svIndex).e;
+  $("#svName").textContent = locked ? "Not yet!" : prizeOf(svIndex).n;
   $("#svMeta").textContent = locked
-    ? `Sticker ${svIndex + 1} is still hidden`
-    : `Sticker ${svIndex + 1} · earned at ${at} coins`;
+    ? `A ${t.name} ${t.kind}, still hidden`
+    : `${t.name} ${t.kind} · number ${svIndex + 1} · earned at ${THRESH[svIndex]} coins`;
   $("#svBar").hidden = !locked;
   if (locked) renderCoinBar($("#svBar"));
+  const give = $("#giveBtn");
+  give.hidden = locked;
+  if (!locked) give.textContent = statsOf(me().id).holding === svIndex ? "Take it back" : "Give to Numo";
   $("#svPrev").disabled = svIndex <= 0;
   $("#svNext").disabled = svIndex >= earned;
 }
@@ -1584,11 +2991,14 @@ function boot(hot){
   renderPlayers();
   paintOpts();
   paintCoins();
+  paintBowl();
+  paintHeld();
   if (hot && hot.screen === "quiz" && hot.S){
     S = hot.S; S.seen = new Set(hot.S.seen || []);
     show("quiz"); paintEq();
     $("#qCount").textContent = `${S.i} / ${S.n}`;
     $("#fill").style.width = ((S.i - 1) / S.n * 100) + "%";
+    catWatch();
   } else {
     show("setup");
   }
