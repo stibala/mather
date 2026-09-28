@@ -6,6 +6,7 @@ import { clockSVG, dayPartOf, isTimeQ, parseTypedTime, showTyped } from "../gen/
 import { lineSVG } from "../gen/line.js";
 import { wallSVG, wallState } from "../gen/wall.js";
 import { factText, makeQuestion, moneySVG, moneyText, moneyTyped } from "../gen/money.js";
+import { catIn, mouthIs, setMouth } from "./mascot.js";
 import { finish } from "./result.js";
 
 /* ============================ the round ============================ */
@@ -145,16 +146,10 @@ function paintMoney(state){
 
 export function say(text, kind){ const el = $("#say"); el.textContent = text; el.className = "say" + (kind ? " " + kind : ""); }
 
-const MOUTHS = {
-  idle:  "M52 88 q8 7 16 0",
-  happy: "M46 84 q14 16 28 0",
-  oops:  "M52 92 q8 -8 16 0",
-  wow:   "M54 84 a7 7 0 1 0 14 0 a7 7 0 1 0 -14 0",
-  sleep: "M56 90 q4 3 8 0"
-};
 function setFace(kind){
-  const m = $("#mascot");
-  $("#mouth").setAttribute("d", MOUTHS[kind] || MOUTHS.idle);
+  const m = catIn("#quizCat");
+  if (!m) return;
+  setMouth(m, kind);
   m.classList.remove("hop", "shake", "look", "tilt", "yawn", "sleep");
   void m.offsetWidth;
   if (kind === "happy" || kind === "wow") m.classList.add("hop");
@@ -168,7 +163,8 @@ const MEOWS = ["Meow?", "Mrrrow?", "Purr…", "Meow!"];
 let boredTimers = [], purrTimer = null;
 const answering = () => S && S.alive && !S.locked && !S.waiting && !$("#quiz").hidden;
 function catClear(){
-  const m = $("#mascot");
+  const m = catIn("#quizCat");
+  if (!m) return;
   m.classList.remove("look", "tilt", "yawn", "sleep");
   $("#purr").classList.remove("on");
 }
@@ -184,24 +180,26 @@ function catMeow(text){
 function catStop(){
   boredTimers.forEach(clearTimeout);
   boredTimers = [];
-  const wasAsleep = $("#mascot").classList.contains("sleep");
+  const cat = catIn("#quizCat");
+  const wasAsleep = !!cat && cat.classList.contains("sleep");
   catClear();
   return wasAsleep;
 }
 export function catWatch(){
   catStop();
   const at = (secs, fn) => boredTimers.push(setTimeout(() => { if (answering()) fn(); }, secs * 1000));
-  const m = $("#mascot");
+  const m = catIn("#quizCat");
+  if (!m) return;
   at(10, () => { catClear(); void m.offsetWidth; m.classList.add("look"); });
   at(18, () => { catClear(); void m.offsetWidth; m.classList.add("tilt"); if (!document.hidden) catMeow(pick(MEOWS)); });
   at(28, () => { catClear(); void m.offsetWidth; m.classList.add("yawn"); });
-  at(30.2, () => { catClear(); $("#mouth").setAttribute("d", MOUTHS.sleep); m.classList.add("sleep"); });
+  at(30.2, () => { catClear(); setMouth(m, "sleep"); m.classList.add("sleep"); });
 }
 // Called on every key. A sleeping cat jumps awake before settling back down.
 function catNudge(){
   const wasAsleep = catStop();
   if (wasAsleep){ setFace("wow"); setTimeout(() => { if (answering()) setFace("idle"); }, 600); }
-  else if ($("#mouth").getAttribute("d") !== MOUTHS.idle && answering()) setFace("idle");
+  else if (!mouthIs(catIn("#quizCat"), "idle") && answering()) setFace("idle");
   if (answering()) catWatch();
 }
 

@@ -10,6 +10,7 @@
     "gen/line.js",
     "gen/wall.js",
     "gen/money.js",
+    "ui/mascot.js",
     "ui/setup.js",
     "ui/quiz.js",
     "ui/result.js",
@@ -27,6 +28,7 @@
     "layout.css",
     "quiz.css",
     "rewards.css",
-    "overlays.css"
+    "overlays.css",
+    "mascot.css"
   ]
 }

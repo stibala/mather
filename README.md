@@ -13,6 +13,7 @@ src/
   ui/              setup, quiz, result, progress, crate, bowl, stickers, csv, chrome
   style/           tokens, layout, quiz, rewards, overlays
 test/              the suites, a fake DOM, and the runner
+tools/             analyse-meow.py — measures real cat recordings
 build.py           src/ -> index.html
 index.html         generated, committed, and what gets published
 ```
@@ -58,6 +59,10 @@ npm.
   sequence on a virtual clock, feeding, and giving a toy to Numo.
 - `migration.test.js` — saves written by every previous version, replayed. The
   standing rule is that a child may gain from a repricing but must never lose.
+- `sounds.test.js` — the synthesis run against a recording `AudioContext`. It
+  hears nothing, but it catches a node type a browser lacks, a NaN in a schedule,
+  and a sequence laid out in the wrong order — all silent failures otherwise,
+  since audio errors are deliberately swallowed.
 
 The stub is deliberately faithful where the app leans on the platform — `className`
 and `classList` are the same object, `append` moves a node and sets `parentNode`,
@@ -311,6 +316,73 @@ Drag a treat up to Numo to feed him. It uses pointer events rather than HTML5
 drag-and-drop, which barely works on a tablet, and a plain tap feeds too — a small
 child who cannot manage a drag is never stuck. Dropping anywhere else, or
 cancelling the drag, feeds nothing.
+
+He also eats it: the cat at the bowl is the same SVG mascot as the one beside the
+questions, built from one template in `src/ui/mascot.js`, and feeding plays three
+beats — lean in, chew with his eyes shut and his ears twitching, then lick his
+lips. Milk skips the chewing and gets lapped; anything crunchy gets faster, sharper
+bites.
+
+For the foods he meows over, **the call comes first**: head up, mouth open, asking
+— and only then the eating, which is the order a cat actually does it in. Nobody
+asks for a biscuit, so crunchy things and milk start straight away. The wait is
+`MEOW_FIRST`, shared between the sound and the animation so the two stay in step.
+
+### What he sounds like
+
+All synthesised, no files, and the sound follows what he is doing on screen rather
+than playing over it:
+
+| food | what you hear |
+|---|---|
+| 🍪 🥨 🍉 | six separate bites, a sharp band of noise over a low thump, timed to the fast chew |
+| 🥛 | five laps of the tongue, one per lap of the animation |
+| 🧀 🍚 🍯 | four soft wet chews, then a purr as he licks his lips |
+| 🐟 🍤 🥓 🍗 🥚 | **a meow first**, then four soft chews |
+
+**The purr** is the one worth explaining. It used to be a sawtooth drone with a
+shallow wobble, which sounds like a broken speaker rather than a cat. A real purr
+is broadband noise pulsed almost fully on and off about 25 times a second — the
+*depth* of that pulsing is the whole trick. It is now three breaths of low-passed
+noise plus a 34 Hz chest tone, each gated by a triangle LFO swinging from 0.10 to
+1.00 and slowing from 26 Hz to 22 Hz as the breath runs out.
+
+**The meow** traces one specific cat. `tools/analyse-meow.py` decodes a recording to
+mono WAV and pulls out duration, the F0 contour by autocorrelation, and spectral
+brightness — the frequency below which 85% of the energy sits — with a hand-rolled
+FFT and no dependencies. The synthesis then follows that trace point for point:
+
+| frac | F0 | brightness | level | |
+|---|---|---|---|---|
+| 0.00 | 551 | 1120 | 9% | starts quiet and dark |
+| 0.22 | 668 | 2638 | 68% | top of the rise |
+| 0.28 | 668 | 2692 | 91% | loudest |
+| 0.43 | 649 | 2595 | 81% | end of the plateau |
+| 0.49 | 649 | 1938 | 87% | **the step down** |
+| 0.65 | 612 | 1830 | 82% | |
+| 1.00 | 612 | 1830 | 25% | fading out |
+
+The important discovery is that **it is not a pair of smooth curves**. It rises,
+sits on a plateau, steps down, and sits on a second plateau before fading — and
+pitch and brightness step *together*, which is the [a] → [u] of "me-OW".
+Reproducing the plateaus and the step is what makes it read as an animal; smooth
+ramps through the same endpoints gave a siren.
+
+The F0 spans only **117 Hz** across the whole call. Earlier guesses used three
+times that, which is a large part of why they sounded wrong.
+
+Two further touches are about not sounding synthetic: **two vibratos at rates that
+never line up** (5.3 and 7.9 Hz), since no animal wavers on a metronome, and a
+**breath of noise** riding behind the tone, since a pure oscillator has no air in
+it.
+
+`sounds.test.js` asserts the traced values and, more usefully, the *shape* — that
+the plateaus are flat, that both curves step down together, and that the call is
+loudest a third of the way in. The reference MP3s are gitignored; they are not
+ours to redistribute.
+
+Audio failures are swallowed on purpose — a browser missing a node type must not
+stop a child feeding the cat — which is exactly why `sounds.test.js` exists.
 
 **Stickers** are kept. There are 36, in four tiers that cost more as they go:
 

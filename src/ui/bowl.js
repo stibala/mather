@@ -1,7 +1,8 @@
 import { TREATS, tinOf } from "../core/prizes.js";
 import { me, save, statsOf } from "../core/db.js";
 import { $, pick } from "../core/dom.js";
-import { sndCrunch, sndMeow, sndPurr, sndSlurp } from "../core/audio.js";
+import { sndFeed } from "../core/audio.js";
+import { catIn, feedFace } from "./mascot.js";
 import { say } from "./quiz.js";
 import { paintHeld } from "./held.js";
 
@@ -67,19 +68,17 @@ function feedNumo(food){
   save();
   paintHeld();
   const kind = TREAT_SOUND[food] || "meow";
-  const bite = $("#bowlFood"), cat = $("#bowlCat"), say = $("#bowlSay");
+  const bite = $("#bowlFood"), say = $("#bowlSay");
   bite.textContent = food;
-  bite.classList.remove("fly"); cat.classList.remove("chomp");
+  bite.classList.remove("fly");
   void bite.offsetWidth;
-  bite.classList.add("fly"); cat.classList.add("chomp");
+  bite.classList.add("fly");
+  feedFace(catIn("#bowlCat"), kind);              // lean in, chew, lick
   say.textContent = pick(NOMS_BY[kind]);
   say.classList.add("on");
   clearTimeout(bowlSayTimer);
   bowlSayTimer = setTimeout(() => say.classList.remove("on"), 1700);
-  if (kind === "crunch") sndCrunch();
-  else if (kind === "slurp") sndSlurp();
-  else if (kind === "purr") sndPurr();
-  else sndMeow(.9 + Math.random() * .3);
+  sndFeed(kind);
   paintBowl();
 }
 

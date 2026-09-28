@@ -229,40 +229,18 @@
   <!-- ============ QUIZ ============ -->
   <main id="quiz" class="stack" hidden>
     <div class="meter">
-      <span class="qcount" id="qCount">1 / 10</span>
+      <div class="meterrow">
+        <span class="qcount" id="qCount">1 / 10</span>
+        <span class="streak" id="streak">🔥 <span id="streakVal">0</span></span>
+      </div>
       <div class="track"><div class="fill" id="fill"></div></div>
-      <span class="streak" id="streak">🔥 <span id="streakVal">0</span></span>
     </div>
 
     <div class="stage" id="stage">
       <div class="cat">
       <span class="purr" id="purr" aria-hidden="true"></span>
       <span class="held" id="heldQuiz" hidden aria-hidden="true"></span>
-      <svg class="mascot" id="mascot" viewBox="0 0 120 120" aria-hidden="true">
-        <path d="M30 44 L26 14 L54 32 Z" fill="var(--tangerine)" stroke="var(--tangerine-d)" stroke-width="3" stroke-linejoin="round"/>
-        <path d="M90 44 L94 14 L66 32 Z" fill="var(--tangerine)" stroke="var(--tangerine-d)" stroke-width="3" stroke-linejoin="round"/>
-        <rect x="18" y="30" width="84" height="80" rx="32" fill="var(--tangerine)" stroke="var(--tangerine-d)" stroke-width="3"/>
-        <circle cx="35" cy="84" r="9" fill="var(--berry)" opacity=".45"/>
-        <circle cx="85" cy="84" r="9" fill="var(--berry)" opacity=".45"/>
-        <ellipse class="eye" cx="46" cy="66" rx="12" ry="13" fill="#fff"/>
-        <ellipse class="eye" cx="74" cy="66" rx="12" ry="13" fill="#fff"/>
-        <circle class="pupil" id="pupilL" cx="46" cy="68" r="5.5" fill="#16264A"/>
-        <circle class="pupil" id="pupilR" cx="74" cy="68" r="5.5" fill="#16264A"/>
-        <path class="lid" d="M36 67 q10 7 20 0" fill="none" stroke="#16264A" stroke-width="3.4" stroke-linecap="round"/>
-        <path class="lid" d="M64 67 q10 7 20 0" fill="none" stroke="#16264A" stroke-width="3.4" stroke-linecap="round"/>
-        <path class="squint" d="M37 68 q9 -9 18 0" fill="none" stroke="#16264A" stroke-width="3.4" stroke-linecap="round"/>
-        <path class="squint" d="M65 68 q9 -9 18 0" fill="none" stroke="#16264A" stroke-width="3.4" stroke-linecap="round"/>
-        <g class="yawnMouth">
-          <ellipse cx="60" cy="92" rx="9" ry="12" fill="#16264A"/>
-          <ellipse cx="60" cy="99" rx="6" ry="4" fill="var(--berry)"/>
-        </g>
-        <path id="mouth" d="M52 88 q8 7 16 0" fill="none" stroke="#16264A" stroke-width="3.4" stroke-linecap="round"/>
-        <g class="zzz" fill="var(--ocean)" font-family="Fredoka,sans-serif" font-weight="600">
-          <text x="92" y="30" font-size="15">z</text>
-          <text x="100" y="18" font-size="19">z</text>
-          <text x="110" y="4" font-size="23">Z</text>
-        </g>
-      </svg>
+      <span class="cathost" id="quizCat"></span>
       </div>
       <div class="bubble" id="bubble">
         <div id="figHost" hidden>
@@ -339,7 +317,7 @@
       <div class="loot" id="lootRow"></div>
       <div class="bowl">
         <span class="bowlsay" id="bowlSay" aria-hidden="true"></span>
-        <div class="bowlcatwrap" id="catDrop"><div class="bowlcat" id="bowlCat" aria-hidden="true">🐱</div><span class="held" id="heldBowl" hidden aria-hidden="true"></span></div>
+        <div class="bowlcatwrap" id="catDrop"><div class="bowlcat cathost" id="bowlCat" aria-hidden="true"></div><span class="held" id="heldBowl" hidden aria-hidden="true"></span></div>
         <span class="bowlfood" id="bowlFood" aria-hidden="true"></span>
         <p class="bowlcount"><b id="treatCount">0</b> <span id="treatWord">treats</span> left</p>
         <div class="tin" id="tin"></div>
@@ -420,10 +398,8 @@
     <input id="paName" class="namefield" type="text" maxlength="14" placeholder="Name" autocomplete="off" aria-label="Player name">
     <p class="sv-meta">Pick a face</p>
     <div class="facepick" id="paFaces"></div>
-    <div class="sv-nav">
-      <button class="go ghost" id="paCancel">Cancel</button>
-      <button class="go" id="paAdd">Add player</button>
-    </div>
+    <button class="go" id="paAdd">Add player</button>
+    <button class="quiet" id="paCancel">Cancel</button>
   </div>
 </div>
 

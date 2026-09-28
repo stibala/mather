@@ -35,7 +35,10 @@ class El {
     if (x && typeof x === "object") x.parentNode = this;
     this.kids.push(x);
   }); }
-  querySelector(){ return new El("span"); }
+  // The same selector must hand back the same element every time, as a real DOM
+  // does. Returning a fresh stub made class changes vanish the moment anything
+  // looked the element up again.
+  querySelector(sel){ this._q = this._q || {}; return this._q[sel] || (this._q[sel] = new El("span")); }
   querySelectorAll(){ return []; }
   addEventListener(k,f){ (this._ev||(this._ev={}))[k]=f; } removeEventListener(k){ if(this._ev) delete this._ev[k]; }
   fire(k,e){ if(this._ev&&this._ev[k]) this._ev[k](e); }
@@ -45,6 +48,35 @@ class El {
   focus(){} remove(){ } closest(){ return null; }
   get disabled(){ return this._dis||false; } set disabled(v){ this._dis=v; }
 }
+// A recording Web Audio stub. It builds nothing audible, but it runs every line
+// of the synthesis and remembers what was made and when — enough to catch a
+// missing node type, a NaN schedule, or a sequence laid out in the wrong order.
+class Param {
+  constructor(){ this.value = 0; this.events = []; }
+  setValueAtTime(v, t){ this.events.push(["set", v, t]); return this; }
+  linearRampToValueAtTime(v, t){ this.events.push(["lin", v, t]); return this; }
+  exponentialRampToValueAtTime(v, t){ this.events.push(["exp", v, t]); return this; }
+}
+class Node {
+  constructor(kind, log){ this.kind = kind; this.log = log; this.frequency = new Param();
+    this.gain = new Param(); this.Q = new Param(); this.offset = new Param(); }
+  connect(){ return this; }
+  start(t){ this.log.started.push({ kind: this.kind, t }); }
+  stop(t){ this.log.stopped.push({ kind: this.kind, t }); }
+}
+class FakeAudio {
+  constructor(){ this.state = "running"; this.currentTime = 0; this.sampleRate = 44100;
+    this.destination = new Node("out", this); this.started = []; this.stopped = []; this.made = []; }
+  resume(){ this.state = "running"; }
+  make(kind){ this.made.push(kind); return new Node(kind, this); }
+  createGain(){ return this.make("gain"); }
+  createOscillator(){ return this.make("osc"); }
+  createBiquadFilter(){ return this.make("filter"); }
+  createBufferSource(){ return this.make("noise"); }
+  createBuffer(ch, n){ return { getChannelData: () => new Float32Array(n) }; }
+}
+globalThis.FakeAudio = FakeAudio;
+
 const REG = {};
 IDS.forEach(id => REG["#"+id] = new El("div"));
 const document = {
@@ -56,7 +88,7 @@ const document = {
   addEventListener(){}
 };
 const localStorage = { _d:{}, getItem(k){return this._d[k]??null}, setItem(k,v){this._d[k]=v}, removeItem(k){delete this._d[k]} };
-const window = { claude:undefined, AudioContext:undefined, innerWidth:400, innerHeight:800, devicePixelRatio:1,
+const window = { claude:undefined, AudioContext:FakeAudio, innerWidth:400, innerHeight:800, devicePixelRatio:1,
   scrollTo(){}, addEventListener(){}, matchMedia(){return {matches:false}} };
 function addEventListener(){}
 // a virtual clock: setTimeout schedules at now+ms, and the test advances time

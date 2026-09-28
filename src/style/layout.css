@@ -101,6 +101,21 @@
 .go:active{transform:translateY(5px);box-shadow:none}
 .go.ghost{background:var(--surface);color:var(--ink);border:2px solid var(--line);box-shadow:0 4px 0 var(--shadow);font-size:1.08rem;padding:13px 18px}
 .go.ghost:active{transform:translateY(4px);box-shadow:none}
+/* A secondary action: small, centred, no fill. Two full-width buttons side by
+   side read as equals and fight each other — the one that does something should
+   be the only one shouting. */
+.quiet{
+  align-self:center;width:auto;padding:8px 20px;border-radius:999px;
+  background:transparent;border:2px solid var(--line);color:var(--ink-2);
+  font-family:Nunito,sans-serif;font-weight:800;font-size:.84rem;
+  transition:transform .08s,color .12s;
+}
+.quiet:active{transform:translateY(2px)}
+.quiet:hover{color:var(--ink)}
+/* .go casts a 5px hard shadow below itself, so a button sitting straight
+   underneath is partly covered by it. */
+.go + .quiet{margin-top:14px}
+
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row>*{flex:1 1 150px}
 

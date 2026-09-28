@@ -1,3 +1,6 @@
 __pycache__/
 .venv/
 .idea/
+
+# reference audio, not ours to redistribute
+temp-meow/

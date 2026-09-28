@@ -94,4 +94,43 @@ tryIt("every screen renders at every stage", () => {
   });
 });
 
+section("one cat, in two places");
+const quiz = catIn("#quizCat"), bowl = catIn("#bowlCat");
+ok(!!quiz && !!bowl, "both hosts hand back a cat");
+ok(quiz !== bowl, "and they are different cats, not the same one twice");
+setFace("happy");
+ok(quiz.classList.contains("hop"), "the quiz cat hops when an answer is right");
+setFace("oops");
+ok(quiz.classList.contains("shake") && !quiz.classList.contains("hop"), "and shakes when it is wrong, clearing the hop");
+ok(mouthIs(quiz, "oops"), "its mouth changed with it");
+setFace("idle");
+ok(mouthIs(quiz, "idle"), "and goes back to idle");
+
+section("eating, in three beats");
+globalThis.__resetClock();
+st().tin = ["🍪", "🥛", "🐟"];
+feedNumo("🍪");                                   // crunchy
+ok(bowl.classList.contains("eat") && !bowl.classList.contains("call"), "he leans straight in — nobody asks for a biscuit");
+ok(bowl.classList.contains("fast"), "fast, because a biscuit is crunchy");
+globalThis.__runUntil(1300);
+ok(!bowl.classList.contains("eat"), "chewing stops");
+ok(bowl.classList.contains("lick"), "and he licks his lips");
+globalThis.__runUntil(2100);
+ok(!bowl.classList.contains("lick"), "then settles back to normal");
+
+globalThis.__resetClock();
+feedNumo("🥛");                                   // milk
+ok(bowl.classList.contains("lap") && !bowl.classList.contains("call"), "milk is lapped straight away, not called for");
+globalThis.__runUntil(1900);
+ok(!bowl.classList.contains("lap") && !bowl.classList.contains("lick"), "and lapping was the licking — no extra beat");
+
+globalThis.__resetClock();
+feedNumo("🐟");                                   // fish — he asks before he eats
+ok(bowl.classList.contains("call") && !bowl.classList.contains("eat"), "fish: he calls for it first");
+globalThis.__runUntil(950);
+ok(!bowl.classList.contains("call") && bowl.classList.contains("eat"), "then gets on with the chewing");
+ok(!bowl.classList.contains("fast") && !bowl.classList.contains("lap"), "at the ordinary pace");
+globalThis.__runUntil(3500);
+ok(["eat","fast","lap","lick","call"].every(c => !bowl.classList.contains(c)), "every eating class is cleared afterwards");
+
 done();

@@ -1,0 +1,52 @@
+/* ---------- Numo eating ---------- */
+.cathost{display:inline-block;line-height:0}
+.bowlcat{font-size:0}
+.bowlcat .mascot{width:104px;height:104px;display:block}
+.mascot .tongue{display:none}
+
+/* beat one: lean in over the food */
+.mascot.eat{animation:leanIn 1.28s ease-in-out}
+.mascot.eat.fast{animation-duration:1.26s}
+.mascot.eat.lap{animation-duration:1.8s}
+@keyframes leanIn{0%,100%{transform:none}16%,84%{transform:translateY(7px) rotate(-6deg)}}
+
+/* beat two: eyes screwed shut, ears twitching, mouth working */
+.mascot.eat .eye,.mascot.eat .pupil,.mascot.eat .mouth{display:none}
+.mascot.eat .squint{display:inline}
+.mascot.eat .ear{transform-box:fill-box;transform-origin:50% 100%;animation:earTwitch .42s ease-in-out 3}
+@keyframes earTwitch{0%,100%{transform:none}45%{transform:rotate(-8deg)}}
+.mascot.eat .yawnMouth{
+  display:inline;transform-box:fill-box;transform-origin:50% 8%;
+  animation:chew .32s ease-in-out 4;
+}
+.mascot.eat.fast .yawnMouth{animation-duration:.18s;animation-iteration-count:7}
+@keyframes chew{0%,100%{transform:scale(1,.2)}50%{transform:scale(1,1)}}
+
+/* milk is lapped rather than chewed */
+.mascot.eat.lap .yawnMouth{display:none}
+.mascot.eat.lap .mouth{display:inline}
+.mascot.eat.lap .tongue{
+  display:inline;transform-box:fill-box;transform-origin:50% 0;
+  animation:lap .36s ease-in-out 5;
+}
+@keyframes lap{0%,100%{transform:scaleY(.06)}55%{transform:scaleY(1)}}
+
+/* beat three: one contented lick of the lips */
+.mascot.lick{animation:leanIn .62s ease-in-out}
+.mascot.lick .eye,.mascot.lick .pupil{display:none}
+.mascot.lick .squint{display:inline}
+.mascot.lick .tongue{
+  display:inline;transform-box:fill-box;transform-origin:50% 0;
+  animation:lickOnce .6s ease-in-out;
+}
+@keyframes lickOnce{0%,100%{transform:scaleY(.06)}50%{transform:scaleY(1)}}
+
+/* asking for it: head up, mouth open, before any eating happens */
+.mascot.call{animation:callUp .9s ease-in-out}
+@keyframes callUp{0%,100%{transform:none}28%,68%{transform:translateY(-5px) rotate(3deg)}}
+.mascot.call .mouth{display:none}
+.mascot.call .yawnMouth{
+  display:inline;transform-box:fill-box;transform-origin:50% 10%;
+  animation:callOpen .9s ease-in-out;
+}
+@keyframes callOpen{0%,100%{transform:scale(1,.14)}22%,66%{transform:scale(.92,1)}}

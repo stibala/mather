@@ -1,5 +1,10 @@
 /* ---------- quiz ---------- */
-.meter{display:flex;align-items:center;gap:10px}
+/* The bar used to sit between the counter and the streak, so it started under
+   the cat and stopped short of the question — aligned to neither. Labels go
+   above it now and the bar runs the full width. */
+.meter{display:flex;flex-direction:column;gap:7px}
+.meterrow{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:20px}
+.meter .track{flex:none;width:100%}
 .track{flex:1;height:14px;border-radius:999px;background:var(--surface);border:2px solid var(--line);overflow:hidden}
 .fill{height:100%;width:0;background:linear-gradient(90deg,var(--leaf),var(--sun));transition:width .35s cubic-bezier(.2,.8,.3,1)}
 .qcount{font-family:Fredoka,sans-serif;font-weight:600;font-variant-numeric:tabular-nums;font-size:.95rem;color:var(--ink-2)}
