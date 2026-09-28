@@ -16,6 +16,7 @@ check:
 
 # Serve on http://localhost:8000 — also reachable from a tablet on the same wifi.
 run: build
+	@echo "http://localhost:8000/?player=adam&treats=12&confetti=1&crate=3"
 	@python3 -m http.server 8000
 
 # Just open the built file; no server needed.

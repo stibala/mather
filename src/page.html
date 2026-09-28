@@ -10,7 +10,7 @@
 
 <div class="wrap">
   <header class="bar">
-    <div class="brand">
+    <div class="brand" id="brand" role="button" tabindex="0" title="Back to the start" aria-label="Back to the start">
       <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
         <rect x="4" y="4" width="40" height="40" rx="13" fill="var(--tangerine)"/>
         <path d="M13 24h9M17.5 19.5v9" stroke="#fff" stroke-width="3.6" stroke-linecap="round"/>
@@ -166,7 +166,7 @@
     </section>
 
     <section class="panel for-tables" hidden>
-      <h2>Which times tables? <small>pick one row to drill it</small></h2>
+      <h2>Which times tables? <small>a row covers both ways round — the 7s give 7 × 4 and 28 ÷ 7</small></h2>
       <div class="opts" id="tableOpts" style="grid-template-columns:repeat(5,1fr)">
         <button class="opt" data-table="1" aria-pressed="true"><span class="t">1</span></button>
         <button class="opt" data-table="2" aria-pressed="true"><span class="t">2</span></button>
@@ -182,13 +182,9 @@
       <p class="hint" id="tableHint"></p>
     </section>
 
-    <section class="panel for-sum">
+    <section class="panel for-cross" hidden>
       <h2>Crossing ten? <small>the carry — for + and − only</small></h2>
-      <div class="opts three" id="crossOpts">
-        <button class="opt" data-cross="no"    aria-pressed="false"><span class="t">Stay under</span><span class="s">44 + 3 = 47</span></button>
-        <button class="opt" data-cross="yes"   aria-pressed="false"><span class="t">Cross over</span><span class="s">47 + 5 = 52</span></button>
-        <button class="opt" data-cross="mixed" aria-pressed="true"><span class="t">Both mixed</span><span class="s">a bit of each</span></button>
-      </div>
+      <div class="opts three" id="crossOpts"></div>
     </section>
 
     <section class="panel for-sum">
@@ -197,7 +193,7 @@
         <button class="opt op" data-op="+" aria-pressed="true"><span class="t">+</span><span class="s">plus</span></button>
         <button class="opt op" data-op="−" aria-pressed="true"><span class="t">−</span><span class="s">minus</span></button>
         <button class="opt op" data-op="×" aria-pressed="false"><span class="t">×</span><span class="s">times</span></button>
-        <button class="opt op" data-op="÷" aria-pressed="false"><span class="t">÷</span><span class="s">shared</span></button>
+        <button class="opt op" data-op="÷" aria-pressed="false"><span class="t">÷</span><span class="s">divide</span></button>
         <button class="opt op" data-op="2×" aria-pressed="false"><span class="t">2×</span><span class="s">double</span></button>
         <button class="opt op" data-op="½" aria-pressed="false"><span class="t">½</span><span class="s">half</span></button>
       </div>
@@ -291,6 +287,9 @@
 
     <div id="bowlSlotResult"></div>
 
+    <button class="go" id="againBtn">Play again</button>
+    <button class="quiet" id="backBtn">Change settings</button>
+
     <section class="panel" id="stickerPanel">
       <h2 id="stickerHead">Next sticker</h2>
       <div class="stickers" id="stickerRow"></div>
@@ -329,10 +328,6 @@
       <ul class="misses" id="missList"></ul>
     </section>
 
-    <div class="row">
-      <button class="go" id="againBtn">Play again</button>
-      <button class="go ghost" id="backBtn">Change settings</button>
-    </div>
   </main>
 
   <!-- ============ PROGRESS ============ -->
@@ -400,6 +395,16 @@
     <div class="facepick" id="paFaces"></div>
     <button class="go" id="paAdd">Add player</button>
     <button class="quiet" id="paCancel">Cancel</button>
+  </div>
+</div>
+
+<div class="overlay" id="leaveAsk" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="leaveTitle">
+    <button class="close" id="leaveClose" aria-label="Close">&times;</button>
+    <p class="sv-name" id="leaveTitle">Stop this round?</p>
+    <p class="sv-meta">You are in the middle of a round. If you go back now, the coins for it are not counted.</p>
+    <button class="go" id="leaveStay">Keep playing</button>
+    <button class="quiet" id="leaveGo">Stop and go back</button>
   </div>
 </div>
 

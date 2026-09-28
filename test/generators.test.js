@@ -8,7 +8,7 @@ section("arithmetic: " + "+ − × ÷ 2× ½");
 let n = 0, bad = 0, why = [];
 for (const range of ["10","20","100"])
   for (const ops of [[PLUS],[MINUS],[TIMES],[DIV],[DBL],[HALF],[PLUS,MINUS,TIMES,DIV]])
-    for (const cross of ["no","yes","mixed"])
+    for (const cross of ["no","one","free","mixed"])
       for (const style of ["answer","missing","mixed"]) {
         const seen = new Set();
         for (let k = 0; k < 700; k++){
@@ -32,8 +32,8 @@ for (const range of ["10","20","100"])
             if (![q.x,q.y,q.z].every(Number.isInteger)) f.push("not whole");
             if (Math.max(q.x,q.y,q.z) > max) f.push("over the range");
             if (q.op === DIV && q.y === 1) f.push("divide by 1");
-            if ((q.op === PLUS || q.op === MINUS) && cross !== "mixed"
-                && crossesTen(q.x, q.op, q.y) !== (cross === "yes")) f.push("carry setting ignored");
+            if ((q.op === PLUS || q.op === MINUS) && (CROSS_FOR[range] || []).includes(cross)
+                && crossKind(q.x, q.op, q.y) !== cross) f.push("carry setting ignored");
             if ((q.op === PLUS || q.op === MINUS) && Math.max(q.x,q.y,q.z) < SPAN[max][0]) f.push("under the band");
           }
           if (q.answer !== (q.slot === 0 ? q.x : q.slot === 1 ? q.y : q.z)) f.push("answer does not match the gap");
@@ -44,6 +44,31 @@ for (const range of ["10","20","100"])
       }
 why.forEach(w => print("         " + w));
 ok(bad === 0, n + " questions, " + bad + " bad");
+
+section("carries come in three grades");
+ok(CROSS_FOR["10"].length === 0, "up to 10 offers none — crossing a ten has no meaning there");
+ok(CROSS_FOR["20"].join() === "no,one", "up to 20 offers no-carry and one-carry only");
+ok(CROSS_FOR["100"].join() === "no,one,free", "up to 100 offers all three");
+ok(crossKind(54, PLUS, 4) === "no", "54 + 4 does not carry");
+ok(crossKind(54, PLUS, 8) === "one", "54 + 8 carries, with a single digit");
+ok(crossKind(38, PLUS, 46) === "free", "38 + 46 carries, with two big numbers");
+ok(crossKind(8, PLUS, 7) === "one", "8 + 7 = 15 counts as a carry — the classic one, which an operand-size rule would have missed");
+ok(crossKind(13, PLUS, 4) === "no", "13 + 4 does not, even though a number is over ten");
+ok(crossKind(52, MINUS, 18) === "free", "52 - 18 borrows between two big numbers");
+ok(crossKind(52, MINUS, 8) === "one", "52 - 8 borrows with a single digit");
+// Up to 20 "free" is not offered, and the reason is asymmetric: two numbers of ten
+// or more cannot ADD to under 20 at all. Subtraction has a narrow corner (20 - 13)
+// which is exactly why it is not worth offering as a setting.
+let freeAdds = 0, freeSubs = 0;
+for (let i = 0; i < 4000; i++){
+  const add = makeQuestion({ mode:"sum", range:"20", ops:[PLUS], cross:"mixed", style:"answer", tables: ALL_TABLES }, new Set());
+  if (crossKind(add.x, add.op, add.y) === "free") freeAdds++;
+  const sub = makeQuestion({ mode:"sum", range:"20", ops:[MINUS], cross:"mixed", style:"answer", tables: ALL_TABLES }, new Set());
+  if (crossKind(sub.x, sub.op, sub.y) === "free") freeSubs++;
+}
+ok(freeAdds === 0, "no addition up to 20 can be 'free' (" + freeAdds + " in 4000)");
+ok(freeSubs > 0 && !CROSS_FOR["20"].includes("free"),
+   "subtraction has a narrow corner (" + freeSubs + " in 4000, all 20 minus a teen) — not offered as a setting");
 
 section("times tables: one row at a time");
 [[[7],"100"],[[3],"100"],[[2,5,10],"100"]].forEach(c => {

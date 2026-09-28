@@ -69,7 +69,13 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 /* ---------- top bar ---------- */
 .bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-block:16px 2px}
-.brand{display:flex;align-items:center;gap:9px;margin-right:auto}
+/* The brand is the way home, so it has to look and behave like something you can
+   press — without turning into a button that shouts for attention. */
+.brand{display:flex;align-items:center;gap:9px;margin-right:auto;cursor:pointer;
+  border-radius:14px;padding:2px 6px 2px 2px;margin-left:-2px;transition:background .12s}
+.brand:hover{background:var(--surface-2)}
+.brand:active{transform:translateY(1px)}
+.brand:focus-visible{outline:3px solid var(--ocean);outline-offset:2px}
 .brand-mark{width:34px;height:34px;flex:none}
 .brand-name{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:1.22rem;letter-spacing:.2px}
 .brand-name em{font-style:normal;color:var(--tangerine)}
@@ -182,8 +188,11 @@ button{font:inherit;color:inherit;cursor:pointer}
    underneath is partly covered by it. */
 .go + .quiet{margin-top:14px}
 
+/* A 150px basis meant two buttons wrapped — each then going full width — as soon
+   as the page was narrower than about 340px, which is any side panel. 120px keeps
+   a pair together down to a phone in portrait. */
 .row{display:flex;gap:10px;flex-wrap:wrap}
-.row>*{flex:1 1 150px}
+.row>*{flex:1 1 120px}
 
 /* ---------- quiz ---------- */
 /* The bar used to sit between the counter and the streak, so it started under
@@ -617,15 +626,26 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
 }
 @keyframes lap{0%,100%{transform:scaleY(.06)}55%{transform:scaleY(1)}}
 
-/* beat three: one contented lick of the lips */
+/* beat three: one contented lick of the lips. The mouth has to open for it — a
+   tongue coming through a drawn-shut mouth is what looked wrong before — so the
+   closed mouth is swapped for a small open one and the tongue sweeps out below it. */
 .mascot.lick{animation:leanIn .62s ease-in-out}
-.mascot.lick .eye,.mascot.lick .pupil{display:none}
+.mascot.lick .eye,.mascot.lick .pupil,.mascot.lick .mouth{display:none}
 .mascot.lick .squint{display:inline}
+.mascot.lick .yawnMouth{
+  display:inline;transform-box:fill-box;transform-origin:50% 12%;
+  animation:lickMouth .62s ease-in-out;
+}
+@keyframes lickMouth{0%,100%{transform:scale(.8,.22)}40%{transform:scale(.88,.5)}}
 .mascot.lick .tongue{
   display:inline;transform-box:fill-box;transform-origin:50% 0;
-  animation:lickOnce .6s ease-in-out;
+  animation:lickOut .62s ease-in-out;
 }
-@keyframes lickOnce{0%,100%{transform:scaleY(.06)}50%{transform:scaleY(1)}}
+@keyframes lickOut{
+  0%,100%{transform:scaleY(.05) rotate(0deg)}
+  35%{transform:scaleY(1) rotate(-27deg)}
+  70%{transform:scaleY(.92) rotate(23deg)}
+}
 
 /* asking for it: head up, mouth open, before any eating happens */
 .mascot.call{animation:callUp .9s ease-in-out}
@@ -640,7 +660,7 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
 
 <div class="wrap">
   <header class="bar">
-    <div class="brand">
+    <div class="brand" id="brand" role="button" tabindex="0" title="Back to the start" aria-label="Back to the start">
       <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
         <rect x="4" y="4" width="40" height="40" rx="13" fill="var(--tangerine)"/>
         <path d="M13 24h9M17.5 19.5v9" stroke="#fff" stroke-width="3.6" stroke-linecap="round"/>
@@ -796,7 +816,7 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
     </section>
 
     <section class="panel for-tables" hidden>
-      <h2>Which times tables? <small>pick one row to drill it</small></h2>
+      <h2>Which times tables? <small>a row covers both ways round — the 7s give 7 × 4 and 28 ÷ 7</small></h2>
       <div class="opts" id="tableOpts" style="grid-template-columns:repeat(5,1fr)">
         <button class="opt" data-table="1" aria-pressed="true"><span class="t">1</span></button>
         <button class="opt" data-table="2" aria-pressed="true"><span class="t">2</span></button>
@@ -812,13 +832,9 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
       <p class="hint" id="tableHint"></p>
     </section>
 
-    <section class="panel for-sum">
+    <section class="panel for-cross" hidden>
       <h2>Crossing ten? <small>the carry — for + and − only</small></h2>
-      <div class="opts three" id="crossOpts">
-        <button class="opt" data-cross="no"    aria-pressed="false"><span class="t">Stay under</span><span class="s">44 + 3 = 47</span></button>
-        <button class="opt" data-cross="yes"   aria-pressed="false"><span class="t">Cross over</span><span class="s">47 + 5 = 52</span></button>
-        <button class="opt" data-cross="mixed" aria-pressed="true"><span class="t">Both mixed</span><span class="s">a bit of each</span></button>
-      </div>
+      <div class="opts three" id="crossOpts"></div>
     </section>
 
     <section class="panel for-sum">
@@ -827,7 +843,7 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
         <button class="opt op" data-op="+" aria-pressed="true"><span class="t">+</span><span class="s">plus</span></button>
         <button class="opt op" data-op="−" aria-pressed="true"><span class="t">−</span><span class="s">minus</span></button>
         <button class="opt op" data-op="×" aria-pressed="false"><span class="t">×</span><span class="s">times</span></button>
-        <button class="opt op" data-op="÷" aria-pressed="false"><span class="t">÷</span><span class="s">shared</span></button>
+        <button class="opt op" data-op="÷" aria-pressed="false"><span class="t">÷</span><span class="s">divide</span></button>
         <button class="opt op" data-op="2×" aria-pressed="false"><span class="t">2×</span><span class="s">double</span></button>
         <button class="opt op" data-op="½" aria-pressed="false"><span class="t">½</span><span class="s">half</span></button>
       </div>
@@ -921,6 +937,9 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
 
     <div id="bowlSlotResult"></div>
 
+    <button class="go" id="againBtn">Play again</button>
+    <button class="quiet" id="backBtn">Change settings</button>
+
     <section class="panel" id="stickerPanel">
       <h2 id="stickerHead">Next sticker</h2>
       <div class="stickers" id="stickerRow"></div>
@@ -959,10 +978,6 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
       <ul class="misses" id="missList"></ul>
     </section>
 
-    <div class="row">
-      <button class="go" id="againBtn">Play again</button>
-      <button class="go ghost" id="backBtn">Change settings</button>
-    </div>
   </main>
 
   <!-- ============ PROGRESS ============ -->
@@ -1030,6 +1045,16 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
     <div class="facepick" id="paFaces"></div>
     <button class="go" id="paAdd">Add player</button>
     <button class="quiet" id="paCancel">Cancel</button>
+  </div>
+</div>
+
+<div class="overlay" id="leaveAsk" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="leaveTitle">
+    <button class="close" id="leaveClose" aria-label="Close">&times;</button>
+    <p class="sv-name" id="leaveTitle">Stop this round?</p>
+    <p class="sv-meta">You are in the middle of a round. If you go back now, the coins for it are not counted.</p>
+    <button class="go" id="leaveStay">Keep playing</button>
+    <button class="quiet" id="leaveGo">Stop and go back</button>
   </div>
 </div>
 
@@ -1130,6 +1155,7 @@ function load(){
     db.settings = Object.assign(structuredClone(DEFAULT_DB.settings), db.settings || {});
     // the money ranges were rescaled from cents-sized to euro-sized
     if (!["1000","2000","10000"].includes(db.settings.moneyTo)) db.settings.moneyTo = "1000";
+    if (db.settings.cross === "yes") db.settings.cross = "one";   // carries got graded
     // Coins have been repriced twice. Rescale an older balance by price-then over
     // price-now, so nobody wakes up with fewer stickers than they went to bed with.
     const wasPricedAt = !stored.v ? 100 : stored.v === 2 ? 300 : PER_STICKER;
@@ -1356,11 +1382,13 @@ function sndPurr(t0){
 const MEOW_F0     = [[0, 551], [.22, 668], [.42, 668], [.55, 612], [1, 612]];
 const MEOW_BRIGHT = [[0, 1120], [.25, 2690], [.44, 2690], [.52, 1880], [1, 1830]];
 const MEOW_AMP    = [[0, .10], [.28, 1], [.48, .92], [.62, .72], [.82, .34], [1, .02]];
-const MEOW_LEN    = .38;                     // the recording is .377 s
+const MEOW_LEN    = .46;                     // the recording is .377; stretched a little,
+                                             // which the trace tolerates because every
+                                             // breakpoint is a fraction of the whole
 // A cat asks for food and then eats it, so for the foods he meows over the call
 // comes first and the chewing follows. Shared with the animation so the picture
 // and the sound stay in step.
-const MEOW_FIRST = .46;
+const MEOW_FIRST = .54;
 const MEOW_WAVER = [[5.3, 5], [7.9, 3]];     // rate Hz, depth Hz — two, so they never line up
 const MEOW_LEVEL = .055;
 function sndMeow(tune, t0){
@@ -1468,11 +1496,25 @@ function mulFacts(max, forDivision, tables){
 // past a ten, while 44 + 3 stays inside one. That is its own difficulty step and
 // has nothing to do with how big the numbers are, so it gets its own toggle.
 const ones = n => n % 10;
-function crossesTen(x, op, y){
-  if (op === "+") return ones(x) + ones(y) >= 10;
-  if (op === "−") return ones(x) < ones(y);
-  return false;                       // a carry means nothing for × and ÷
+// Crossing a ten comes in three grades, not two. Whether there is a carry at all
+// is the first question; when there is, doing it with a single digit (54 + 8) is a
+// different exercise from doing it with two two-digit numbers (38 + 46).
+//
+//   "no"    54 + 4   the units do not spill over
+//   "one"   54 + 8   they do, but only one number has tens in it
+//   "free"  38 + 46  they do, and both numbers are two-digit
+//
+// Up to 20, "free" is not offered. Two numbers of ten or more cannot ADD to under
+// 20 at all, and the only subtractions that qualify are 20 minus a teen — far too
+// narrow a corner to hand a child as a setting. Under 10 the idea does not apply
+// at all, and that band says so by offering nothing.
+function crossKind(x, op, y){
+  const carry = op === "+" ? ones(x) + ones(y) >= 10 : ones(x) < ones(y);
+  if (!carry) return "no";
+  return x >= 10 && y >= 10 ? "free" : "one";
 }
+const CROSS_FOR = { "10": [], "20": ["no", "one"], "100": ["no", "one", "free"] };
+
 // The biggest number in a question sits inside these bounds, so every range
 // really does practise its own size of number rather than drifting small.
 const SPAN = { 10:[4,10], 20:[11,20], 100:[21,100] };
@@ -1491,17 +1533,18 @@ function makeFact(op, max, cross, tables){
     // draw from the even numbers inside the band — nudging an odd one down can
     // push it under the band's floor (11 would become 10 in the "up to 20" band)
     const [lo, hi] = SPAN[max];
-    const first = lo + (lo % 2), last = hi - (hi % 2);
-    const big = first + rnd(0, (last - first) / 2) * 2;
+    const first = lo + (lo % 2), last2 = hi - (hi % 2);
+    const big = first + rnd(0, (last2 - first) / 2) * 2;
     return op === "2×" ? [big / 2, "2×", null, big] : [big, "½", null, big / 2];
   }
   if (op === "×"){ const [x,y,p] = pick(mulFacts(max, false, tables)); return [x,"×",y,p]; }
   if (op === "÷"){ const [x,y,p] = pick(mulFacts(max, true, tables)); return [p,"÷",y,x]; }
-  const want = cross === "yes" ? true : cross === "no" ? false : null;
+  const offered = CROSS_FOR[max] || [];
+  const want = offered.includes(cross) ? cross : null;   // "mixed", or a band with no say
   let last = rawFact(op, max);
   if (want === null) return last;
   for (let t = 0; t < 240; t++){
-    if (crossesTen(last[0], last[1], last[2]) === want) return last;
+    if (crossKind(last[0], last[1], last[2]) === want) return last;
     last = rawFact(op, max);
   }
   return last;                        // asked for something this range can barely make
@@ -2003,7 +2046,13 @@ const CAT_SVG = `<svg class="mascot" viewBox="0 0 120 120" aria-hidden="true">
     <ellipse cx="60" cy="92" rx="9" ry="12" fill="#16264A"/>
     <ellipse cx="60" cy="99" rx="6" ry="4" fill="var(--berry)"/>
   </g>
-  <ellipse class="tongue" cx="60" cy="90" rx="7" ry="9" fill="var(--berry)" stroke="var(--berry-d)" stroke-width="1.6"/>
+  <!-- A tongue, not a blob: wide where it leaves the mouth and tapering to a
+       rounded tip. The two sides meet that tip almost horizontally, so it reads
+       as a tongue rather than a spearhead. It hangs from the top edge of its own
+       box, which is what the lick and lap animations rotate and stretch about. -->
+  <path class="tongue" fill="var(--berry)" stroke="var(--berry-d)" stroke-width="1.6" stroke-linejoin="round"
+        d="M60 90.4 C64.2 90.4 65 93.6 64.4 97.6 C63.8 101.4 62.8 105.9 60 106.1
+           C57.2 105.9 56.2 101.4 55.6 97.6 C55 93.6 55.8 90.4 60 90.4 Z"/>
   <path class="mouth" d="M52 88 q8 7 16 0" fill="none" stroke="#16264A" stroke-width="3.4" stroke-linecap="round"/>
   <g class="zzz" fill="var(--ocean)" font-family="Fredoka,sans-serif" font-weight="600">
     <text x="92" y="30" font-size="15">z</text>
@@ -2187,6 +2236,7 @@ $("#tableOpts").addEventListener("click", e => {
   save(); paintOpts();
 });
 
+const CROSS_LABEL = { no: "No carry", one: "One carry", free: "Two big ones", mixed: "Mixed" };
 function paintOpts(){
   const s = DB.settings;
   document.querySelectorAll(".for-sum").forEach(e => { e.hidden = s.mode !== "sum"; });
@@ -2201,10 +2251,12 @@ function paintOpts(){
   if (needsTables){
     const facts = new Set(mulFacts(Number(s.range), false, s.tables).map(f => f[0] + "x" + f[1])).size;
     const thin = facts < 6;
+    const both = s.ops.includes("×") && s.ops.includes("÷");
+    const what = both ? "sums, each way round" : s.ops.includes("÷") ? "divisions" : "sums";
     $("#tableHint").className = "hint" + (thin ? " warn" : "");
     $("#tableHint").textContent = thin
-      ? `Only ${facts} sums fit — try a bigger number size.`
-      : `${facts} different sums to practise.`;
+      ? `Only ${facts} fit at this size — try a bigger number size.`
+      : `${facts} different ${what} to practise.`;
   }
   [["#wallRowsOpts","wallRows"],["#wallToOpts","wallTo"],
    ["#moneyToOpts","moneyTo"],["#moneyTaskOpts","moneyTask"],["#moneyCentsOpts","moneyCents"],
@@ -2225,10 +2277,32 @@ function paintOpts(){
     const shownOp = s.ops.find(o => !UNARY[o]) || s.ops[0] || "+";
     b.querySelector(".s").textContent = exampleOf(b.dataset.range, shownOp, s.cross === "mixed" ? "no" : s.cross);
   });
-  $("#crossOpts").querySelectorAll(".opt").forEach(b => {
-    b.setAttribute("aria-pressed", String(b.dataset.cross === s.cross));
-    if (b.dataset.cross !== "mixed") b.querySelector(".s").textContent = exampleOf(s.range, addSub, b.dataset.cross);
-  });
+  // Each band offers different carries, so the chips are built rather than fixed:
+  // 10 has none at all, 20 cannot do two two-digit numbers, 100 can do all three.
+  const offered = CROSS_FOR[s.range] || [];
+  document.querySelectorAll(".for-cross").forEach(e => { e.hidden = s.mode !== "sum" || !offered.length; });
+  if (offered.length){
+    if (s.cross !== "mixed" && !offered.includes(s.cross)){ s.cross = "mixed"; save(); }
+    const host = $("#crossOpts");
+    const want = offered.concat("mixed");
+    host.className = "opts " + (want.length > 3 ? "four" : "three");
+    if (host.childElementCount !== want.length){
+      host.textContent = "";
+      want.forEach(v => {
+        const b = document.createElement("button");
+        b.className = "opt";
+        b.dataset.cross = v;
+        b.innerHTML = '<span class="t"></span><span class="s"></span>';
+        b.firstElementChild.textContent = CROSS_LABEL[v];
+        host.append(b);
+      });
+    }
+    host.querySelectorAll(".opt").forEach(b => {
+      const v = b.dataset.cross;
+      b.setAttribute("aria-pressed", String(v === s.cross));
+      b.querySelector(".s").textContent = v === "mixed" ? "a bit of each" : exampleOf(s.range, addSub, v);
+    });
+  }
   $("#opOpts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(s.ops.includes(b.dataset.op))));
   $("#styleOpts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.style === s.style)));
   $("#countOpts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.count) === s.count)));
@@ -2603,6 +2677,20 @@ function finish(){
 }
 
 /* ============================ confetti ============================ */
+// It used to stop dead at 2.6 s, wiping whatever was still mid-air. Now the pieces
+// fall under gravity, pile up along the bottom of the screen, sit there a moment,
+// and only then fade — so the ending is the confetti finishing rather than the
+// canvas being switched off.
+//
+// The pile is faked per column rather than by letting pieces collide: the screen is
+// divided into strips, each strip remembers how deep its heap is, and a piece lands
+// on top of whatever is already in its strip. Real collision between 110 pieces
+// would be a lot of work for a heap nobody inspects; this gives the same picture —
+// deeper where more of it fell — for about ten lines.
+const CONFETTI_REST = 1000;                      // ms the pile sits before fading
+const CONFETTI_FADE = 1100;                      // ms to fade away
+const CONFETTI_MAX = 11000;                      // a hard stop, in case one gets stuck
+const CONFETTI_COLS = 22;
 function confetti(){
   if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
   const cv = $("#confetti"), ctx = cv.getContext("2d");
@@ -2612,24 +2700,53 @@ function confetti(){
   const css = getComputedStyle(document.documentElement);
   const cols = ["--tangerine","--berry","--leaf","--sun","--ocean","--grape"].map(v => css.getPropertyValue(v).trim());
   const bits = Array.from({ length: 110 }, () => ({
-    x: Math.random() * innerWidth, y: -20 - Math.random() * innerHeight * .5,
+    x: Math.random() * innerWidth, y: -20 - Math.random() * innerHeight * .6,
     w: 6 + Math.random() * 7, h: 9 + Math.random() * 9,
-    vy: 2.4 + Math.random() * 3.2, vx: -1.4 + Math.random() * 2.8,
-    a: Math.random() * Math.PI, va: -.16 + Math.random() * .32,
-    c: pick(cols)
+    vy: 1.2 + Math.random() * 1.7, vx: -.7 + Math.random() * 1.4,
+    a: Math.random() * Math.PI, va: -.14 + Math.random() * .28,
+    sway: Math.random() * Math.PI * 2, swayRate: .02 + Math.random() * .03,
+    c: pick(cols), rest: false
   }));
+  const heap = new Array(CONFETTI_COLS).fill(0);
+  const strip = innerWidth / CONFETTI_COLS;
   const t0 = performance.now();
+  let settled = null;                            // when the last piece came to rest
   (function frame(t){
     ctx.clearRect(0, 0, innerWidth, innerHeight);
+    let alpha = 1;
+    if (settled !== null && t - settled > CONFETTI_REST){
+      alpha = 1 - (t - settled - CONFETTI_REST) / CONFETTI_FADE;
+      if (alpha <= 0) return;                    // canvas already cleared above
+    }
+    ctx.globalAlpha = Math.max(0, alpha);
+    let flying = false;
     bits.forEach(b => {
-      b.x += b.vx; b.y += b.vy; b.a += b.va;
+      if (!b.rest){
+        b.vy += .06;                             // gravity, so they accelerate down
+        b.sway += b.swayRate;
+        b.x += b.vx + Math.sin(b.sway) * .7;     // and flutter on the way
+        b.y += b.vy;
+        b.a += b.va;
+        const col = Math.max(0, Math.min(CONFETTI_COLS - 1, Math.floor(b.x / strip)));
+        const floor = innerHeight - heap[col] - b.h / 2;
+        if (b.y >= floor){
+          b.y = floor;
+          b.rest = true;
+          heap[col] += b.h * .42;                // pieces overlap as they pile
+          b.a = Math.PI / 2 + (Math.random() - .5) * .6;   // settle roughly flat
+        } else flying = true;
+      }
       ctx.save(); ctx.translate(b.x, b.y); ctx.rotate(b.a);
       ctx.fillStyle = b.c; ctx.fillRect(-b.w/2, -b.h/2, b.w, b.h); ctx.restore();
     });
-    if (t - t0 < 2600) requestAnimationFrame(frame);
-    else ctx.clearRect(0, 0, innerWidth, innerHeight);
+    ctx.globalAlpha = 1;
+    if (!flying && settled === null) settled = t;
+    if (t - t0 > CONFETTI_MAX && settled === null) settled = t;
+    requestAnimationFrame(frame);
   })(t0);
 }
+
+
 
 /* ============================ progress ============================ */
 function renderProgress(){
@@ -3203,6 +3320,30 @@ $("#startBtn").onclick  = () => { sndTap(); startRound(); };
 $("#againBtn").onclick  = () => { sndTap(); startRound(); };
 $("#backBtn").onclick   = () => { sndTap(); show("setup"); };
 $("#quitBtn").onclick   = () => { sndTap(); if (S) S.alive = false; show("setup"); };
+
+// The brand is the way home from anywhere. Mid-round it asks first: the header
+// sits right above the keypad, and a stray tap there should not quietly throw
+// away a round a child is halfway through. Everywhere else it just goes back.
+function closeLeaveAsk(){ $("#leaveAsk").hidden = true; }
+function goHome(){
+  sndTap();
+  if (!$("#quiz").hidden && S && S.alive){ $("#leaveAsk").hidden = false; return; }
+  show("setup");
+}
+$("#brand").onclick = goHome;
+$("#brand").onkeydown = e => {
+  if (e.key === "Enter" || e.key === " "){ e.preventDefault(); goHome(); }
+};
+$("#leaveStay").onclick  = () => { sndTap(); closeLeaveAsk(); };
+$("#leaveClose").onclick = () => { sndTap(); closeLeaveAsk(); };
+$("#leaveGo").onclick    = () => {
+  sndTap(); closeLeaveAsk();
+  if (S) S.alive = false;
+  show("setup");
+};
+$("#leaveAsk").addEventListener("click", e => {          // tapping the dark closes it
+  if (e.target === $("#leaveAsk")) closeLeaveAsk();
+});
 $("#exportBtn").onclick = exportCSV;
 $("#importBtn").onclick = () => $("#importFile").click();
 $("#importFile").onchange = e => { if (e.target.files[0]) importCSV(e.target.files[0]); e.target.value = ""; };
@@ -3215,6 +3356,10 @@ $("#pad").addEventListener("click", e => {
 addEventListener("keydown", e => {
   if (!$("#playerAdd").hidden){                 // the name field owns the keyboard
     if (e.key === "Escape") closeAddPlayer();
+    return;
+  }
+  if (!$("#leaveAsk").hidden){                  // the question owns the keyboard
+    if (e.key === "Escape"){ e.preventDefault(); closeLeaveAsk(); }
     return;
   }
   if (e.target instanceof HTMLInputElement) return;
@@ -3237,15 +3382,20 @@ addEventListener("keydown", e => {
 
 /* ============================ boot ============================ */
 // A hook for trying things out without grinding through rounds:
-//   ?player=adam&treats=12
+//   ?player=adam&treats=12&confetti=1&crate=4
 // selects that player, creating them if they are new, drops treats in their tin,
-// then scrubs itself out of the address bar so a reload does not do it twice.
-// Does nothing at all unless asked.
+// sets the confetti off, leaves a crate of four waiting to be opened, then scrubs
+// itself out of the address bar so a reload does not do it twice. Does nothing at
+// all unless asked.
 const COLORS = ["#2E86FF", "#0FA863", "#7C5CFF", "#FFC531", "#F0347B", "#FF7A1A"];
+const HOOKS = ["player", "treats", "confetti", "crate"];
+let devCrate = 0;                                   // acted on once the page is painted
 function devSeed(){
   let p;
   try { p = new URLSearchParams(location.search); } catch { return; }
-  if (!p.has("treats") && !p.has("player")) return;
+  if (!HOOKS.some(k => p.has(k))) return;
+  devCrate = Math.max(0, Math.min(20, parseInt(p.get("crate"), 10) || 0));
+  if (p.has("confetti")) setTimeout(confetti, 400);   // after the first paint
   const name = (p.get("player") || "").trim().slice(0, 14);
   if (name){
     let who = DB.profiles.find(x => x.name.toLowerCase() === name.toLowerCase());
@@ -3260,6 +3410,23 @@ function devSeed(){
   for (let i = 0; i < n; i++) tinOf(DB.active).push(pick(TREATS));
   save();
   try { history.replaceState(null, "", location.pathname); } catch {}
+}
+
+// ?crate=N lands you on the results screen with a crate of N treats shut in front
+// of you, so the reveal can be watched without playing a round. It goes through
+// the real finish(), so the coins, the treats and any sticker the new total
+// crosses are worked out exactly as they are after a real round — the only
+// invented part is the round itself, and that is taken back out of the history
+// afterwards so the stats screen keeps telling the truth.
+function devRound(treats){
+  const st = statsOf(me().id), h = histOf(me().id), rows = h.length;
+  S = { alive: true, n: 10, i: 11, right: 9, best: 0, coins: treats * TREAT_COST,
+        times: Array.from({ length: 10 }, () => 3 + Math.random() * 3),
+        seen: new Set(), misses: [], settings: { ...DB.settings } };
+  finish();
+  h.length = rows;                                  // the round never happened
+  st.questions -= 10;
+  save();
 }
 
 function boot(hot){
@@ -3279,6 +3446,8 @@ function boot(hot){
     $("#qCount").textContent = `${S.i} / ${S.n}`;
     $("#fill").style.width = ((S.i - 1) / S.n * 100) + "%";
     catWatch();
+  } else if (devCrate){
+    devRound(devCrate);
   } else {
     show("setup");
   }

@@ -34,6 +34,30 @@ $("#startBtn").onclick  = () => { sndTap(); startRound(); };
 $("#againBtn").onclick  = () => { sndTap(); startRound(); };
 $("#backBtn").onclick   = () => { sndTap(); show("setup"); };
 $("#quitBtn").onclick   = () => { sndTap(); if (S) S.alive = false; show("setup"); };
+
+// The brand is the way home from anywhere. Mid-round it asks first: the header
+// sits right above the keypad, and a stray tap there should not quietly throw
+// away a round a child is halfway through. Everywhere else it just goes back.
+export function closeLeaveAsk(){ $("#leaveAsk").hidden = true; }
+function goHome(){
+  sndTap();
+  if (!$("#quiz").hidden && S && S.alive){ $("#leaveAsk").hidden = false; return; }
+  show("setup");
+}
+$("#brand").onclick = goHome;
+$("#brand").onkeydown = e => {
+  if (e.key === "Enter" || e.key === " "){ e.preventDefault(); goHome(); }
+};
+$("#leaveStay").onclick  = () => { sndTap(); closeLeaveAsk(); };
+$("#leaveClose").onclick = () => { sndTap(); closeLeaveAsk(); };
+$("#leaveGo").onclick    = () => {
+  sndTap(); closeLeaveAsk();
+  if (S) S.alive = false;
+  show("setup");
+};
+$("#leaveAsk").addEventListener("click", e => {          // tapping the dark closes it
+  if (e.target === $("#leaveAsk")) closeLeaveAsk();
+});
 $("#exportBtn").onclick = exportCSV;
 $("#importBtn").onclick = () => $("#importFile").click();
 $("#importFile").onchange = e => { if (e.target.files[0]) importCSV(e.target.files[0]); e.target.value = ""; };
@@ -46,6 +70,10 @@ $("#pad").addEventListener("click", e => {
 addEventListener("keydown", e => {
   if (!$("#playerAdd").hidden){                 // the name field owns the keyboard
     if (e.key === "Escape") closeAddPlayer();
+    return;
+  }
+  if (!$("#leaveAsk").hidden){                  // the question owns the keyboard
+    if (e.key === "Escape"){ e.preventDefault(); closeLeaveAsk(); }
     return;
   }
   if (e.target instanceof HTMLInputElement) return;

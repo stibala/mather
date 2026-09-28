@@ -1,3 +1,4 @@
+import { CROSS_FOR } from "../gen/sums.js";
 import { FACES } from "../core/prizes.js";
 import { DB, save } from "../core/db.js";
 import { $, pick, toast } from "../core/dom.js";
@@ -125,7 +126,8 @@ $("#tableOpts").addEventListener("click", e => {
   save(); paintOpts();
 });
 
-export function paintOpts(){
+export const CROSS_LABEL = { no: "No carry", one: "One carry", free: "Two big ones", mixed: "Mixed" };
+function paintOpts(){
   const s = DB.settings;
   document.querySelectorAll(".for-sum").forEach(e => { e.hidden = s.mode !== "sum"; });
   document.querySelectorAll(".for-clock").forEach(e => { e.hidden = s.mode !== "clock"; });
@@ -139,10 +141,12 @@ export function paintOpts(){
   if (needsTables){
     const facts = new Set(mulFacts(Number(s.range), false, s.tables).map(f => f[0] + "x" + f[1])).size;
     const thin = facts < 6;
+    const both = s.ops.includes("×") && s.ops.includes("÷");
+    const what = both ? "sums, each way round" : s.ops.includes("÷") ? "divisions" : "sums";
     $("#tableHint").className = "hint" + (thin ? " warn" : "");
     $("#tableHint").textContent = thin
-      ? `Only ${facts} sums fit — try a bigger number size.`
-      : `${facts} different sums to practise.`;
+      ? `Only ${facts} fit at this size — try a bigger number size.`
+      : `${facts} different ${what} to practise.`;
   }
   [["#wallRowsOpts","wallRows"],["#wallToOpts","wallTo"],
    ["#moneyToOpts","moneyTo"],["#moneyTaskOpts","moneyTask"],["#moneyCentsOpts","moneyCents"],
@@ -163,10 +167,32 @@ export function paintOpts(){
     const shownOp = s.ops.find(o => !UNARY[o]) || s.ops[0] || "+";
     b.querySelector(".s").textContent = exampleOf(b.dataset.range, shownOp, s.cross === "mixed" ? "no" : s.cross);
   });
-  $("#crossOpts").querySelectorAll(".opt").forEach(b => {
-    b.setAttribute("aria-pressed", String(b.dataset.cross === s.cross));
-    if (b.dataset.cross !== "mixed") b.querySelector(".s").textContent = exampleOf(s.range, addSub, b.dataset.cross);
-  });
+  // Each band offers different carries, so the chips are built rather than fixed:
+  // 10 has none at all, 20 cannot do two two-digit numbers, 100 can do all three.
+  const offered = CROSS_FOR[s.range] || [];
+  document.querySelectorAll(".for-cross").forEach(e => { e.hidden = s.mode !== "sum" || !offered.length; });
+  if (offered.length){
+    if (s.cross !== "mixed" && !offered.includes(s.cross)){ s.cross = "mixed"; save(); }
+    const host = $("#crossOpts");
+    const want = offered.concat("mixed");
+    host.className = "opts " + (want.length > 3 ? "four" : "three");
+    if (host.childElementCount !== want.length){
+      host.textContent = "";
+      want.forEach(v => {
+        const b = document.createElement("button");
+        b.className = "opt";
+        b.dataset.cross = v;
+        b.innerHTML = '<span class="t"></span><span class="s"></span>';
+        b.firstElementChild.textContent = CROSS_LABEL[v];
+        host.append(b);
+      });
+    }
+    host.querySelectorAll(".opt").forEach(b => {
+      const v = b.dataset.cross;
+      b.setAttribute("aria-pressed", String(v === s.cross));
+      b.querySelector(".s").textContent = v === "mixed" ? "a bit of each" : exampleOf(s.range, addSub, v);
+    });
+  }
   $("#opOpts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(s.ops.includes(b.dataset.op))));
   $("#styleOpts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.style === s.style)));
   $("#countOpts").querySelectorAll(".opt").forEach(b => b.setAttribute("aria-pressed", String(Number(b.dataset.count) === s.count)));

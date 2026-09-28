@@ -32,6 +32,16 @@ gets published, double-clicked, and copied onto a tablet.
 
 To use it on a tablet, run `make run` and open `http://<your-mac-ip>:8000`.
 
+### Trying things without playing a round
+
+    ?player=adam&treats=12&confetti=1
+
+Selects that player, creating them if they are new; drops treats in their tin; and
+sets the confetti off. Then it scrubs itself out of the address bar, so a reload
+does not do it all again. Any part can be used on its own, and it does nothing at
+all unless asked. Works on `make run` or the local file — a published artifact runs
+in a sandboxed frame, where query parameters may not reach the page.
+
 ### Why a build step rather than real module files
 
 Browsers refuse to load ES modules over `file://`, so shipping separate `.js`
@@ -77,7 +87,7 @@ started as a convenient lie that made correct code look broken.
 | Question shapes | `3 + 4 = ?` and `3 + ? = 7` and `? + 4 = 7` |
 | Operations | `+` `−` `×` `÷` `2×` `½`, any combination, toggled per round |
 | Number size | **Up to 10** / **Up to 20** / **Up to 100** |
-| Crossing ten | **Stay under** / **Cross over** / **Mixed** — the carry, on its own toggle |
+| Crossing ten | **No carry** / **One carry** / **Two big ones** — graded, and per band |
 | Fun | a cat to feed, streak counter, coins, 36 tiered stickers, confetti, sounds |
 | Mistakes | the right answer fills in and the round waits for the child to press ✓ |
 | Progress | per-player history, % correct chart, best streak, CSV export |
@@ -98,16 +108,30 @@ quietly hand out `3 + 4`:
 | Up to 20 | 11–20 | `15 + 4 = 19` |
 | Up to 100 | 21–100 | `23 + 16 = 39` |
 
-**Crossing ten** is the carry or the borrow — `ones(a) + ones(b) >= 10` for
-addition, `ones(a) < ones(b)` for subtraction:
+**Crossing ten** is the carry or the borrow, and it comes in **three grades**,
+because carrying with a single digit is a different exercise from carrying between
+two two-digit numbers:
 
-| | up to 20 | up to 100 |
+| | | |
 |---|---|---|
-| Stay under | `15 + 4 = 19`, `17 − 13 = 4` | `23 + 16 = 39`, `56 − 12 = 44` |
-| Cross over | `9 + 9 = 18`, `13 − 5 = 8` | `57 + 27 = 84`, `46 − 29 = 17` |
+| No carry | `54 + 4` | the units do not spill over |
+| One carry | `54 + 8` | they do, but only one number has tens in it |
+| Two big ones | `38 + 46` | they do, and both numbers are two-digit |
 
-At "up to 10" crossing means making or breaking ten exactly (`7 + 3 = 10`,
-`10 − 4 = 6`), which is the only carry that fits in that range.
+The bands offer different sets, so the chips are **built per band** rather than
+fixed (`CROSS_FOR`):
+
+- **Up to 10** offers nothing — crossing a ten has no meaning when ten is the
+  ceiling. The panel hides itself.
+- **Up to 20** offers no-carry and one-carry. Two numbers of ten or more cannot
+  *add* to under 20 at all; the only subtractions that qualify are 20 minus a teen,
+  too narrow a corner to hand a child as a setting.
+- **Up to 100** offers all three.
+
+The grade is decided by the carry, not by how big the numbers look. That matters:
+`8 + 7 = 15` **is** a carry — the classic Zehnerübergang — while `13 + 4 = 17` is
+not, even though it contains a number over ten. A rule based on operand size gets
+both backwards.
 
 Carrying does not apply to `×` and `÷`, so the toggle is ignored for those — the
 range alone picks the facts (`p <= 10`, `10 < p <= 20`, or the full 1–10 tables).
@@ -247,8 +271,12 @@ wrap correctly past 12 or 24.
 
 German children learn the tables one row at a time. In Numbers mode, whenever `×`
 or `÷` is chosen, a row of chips 1–10 restricts the facts to the chosen rows — tap
-just the 7 to drill die 7er-Reihe. A fact counts as in-row if *either* factor is,
-so `3 × 7` and `7 × 3` both appear.
+just the 7 to drill die 7er-Reihe.
+
+A row covers the table **both ways round**: picking the 7s gives `7 × 4`, `4 × 7`,
+`28 ÷ 7` and `28 ÷ 4`, because a division fact is a times-table fact read
+backwards. That is why the panel appears for `÷` as well as `×`, and the heading
+says so rather than leaving it to be guessed.
 
 A live note says how many distinct sums the current combination allows, and warns
 when it is under six: the 7-row inside "up to 20" is only `2 × 7` and `7 × 2`, which
@@ -322,6 +350,11 @@ questions, built from one template in `src/ui/mascot.js`, and feeding plays thre
 beats — lean in, chew with his eyes shut and his ears twitching, then lick his
 lips. Milk skips the chewing and gets lapped; anything crunchy gets faster, sharper
 bites.
+
+The lick opens his mouth: a tongue emerging through a drawn-shut mouth was the
+thing that looked wrong, so the closed mouth is swapped for a small open one and
+the tongue sweeps out from below it, left then right. The tongue shape also sits
+below the mouth curve now rather than overlapping it.
 
 For the foods he meows over, **the call comes first**: head up, mouth open, asking
 — and only then the eating, which is the order a cat actually does it in. Nobody

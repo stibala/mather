@@ -31,6 +31,7 @@ function load(){
     db.settings = Object.assign(structuredClone(DEFAULT_DB.settings), db.settings || {});
     // the money ranges were rescaled from cents-sized to euro-sized
     if (!["1000","2000","10000"].includes(db.settings.moneyTo)) db.settings.moneyTo = "1000";
+    if (db.settings.cross === "yes") db.settings.cross = "one";   // carries got graded
     // Coins have been repriced twice. Rescale an older balance by price-then over
     // price-now, so nobody wakes up with fewer stickers than they went to bed with.
     const wasPricedAt = !stored.v ? 100 : stored.v === 2 ? 300 : PER_STICKER;

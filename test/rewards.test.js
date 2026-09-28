@@ -133,4 +133,24 @@ ok(!bowl.classList.contains("fast") && !bowl.classList.contains("lap"), "at the 
 globalThis.__runUntil(3500);
 ok(["eat","fast","lap","lick","call"].every(c => !bowl.classList.contains(c)), "every eating class is cleared afterwards");
 
+section("the brand is the way home, and asks before it throws a round away");
+q("#leaveAsk").hidden = true;
+show("result");
+q("#brand").onclick();
+ok(!q("#setup").hidden && q("#result").hidden, "from the results it goes straight back");
+ok(q("#leaveAsk").hidden, "with nothing to ask about");
+S = { alive: true, n: 10, i: 4, right: 3, best: 2, coins: 12,
+      times: [3], seen: new Set(), misses: [], settings: { ...DB.settings } };
+show("quiz");
+q("#brand").onclick();
+ok(!q("#quiz").hidden, "mid-round one tap does not leave");
+ok(!q("#leaveAsk").hidden, "it asks first");
+ok(S.alive, "and the round is untouched while the question is up");
+q("#leaveStay").onclick();
+ok(q("#leaveAsk").hidden && !q("#quiz").hidden, "keep playing puts you back in the round");
+ok(S.alive, "still alive");
+q("#brand").onclick(); q("#leaveGo").onclick();
+ok(q("#leaveAsk").hidden && !q("#setup").hidden, "stop and go back does leave");
+ok(!S.alive, "and ends the round");
+
 done();

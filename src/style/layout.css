@@ -3,7 +3,13 @@
 
 /* ---------- top bar ---------- */
 .bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-block:16px 2px}
-.brand{display:flex;align-items:center;gap:9px;margin-right:auto}
+/* The brand is the way home, so it has to look and behave like something you can
+   press — without turning into a button that shouts for attention. */
+.brand{display:flex;align-items:center;gap:9px;margin-right:auto;cursor:pointer;
+  border-radius:14px;padding:2px 6px 2px 2px;margin-left:-2px;transition:background .12s}
+.brand:hover{background:var(--surface-2)}
+.brand:active{transform:translateY(1px)}
+.brand:focus-visible{outline:3px solid var(--ocean);outline-offset:2px}
 .brand-mark{width:34px;height:34px;flex:none}
 .brand-name{font-family:Fredoka,Nunito,sans-serif;font-weight:600;font-size:1.22rem;letter-spacing:.2px}
 .brand-name em{font-style:normal;color:var(--tangerine)}
@@ -116,6 +122,9 @@
    underneath is partly covered by it. */
 .go + .quiet{margin-top:14px}
 
+/* A 150px basis meant two buttons wrapped — each then going full width — as soon
+   as the page was narrower than about 340px, which is any side panel. 120px keeps
+   a pair together down to a phone in portrait. */
 .row{display:flex;gap:10px;flex-wrap:wrap}
-.row>*{flex:1 1 150px}
+.row>*{flex:1 1 120px}
 

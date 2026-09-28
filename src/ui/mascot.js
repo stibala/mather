@@ -24,7 +24,13 @@ const CAT_SVG = `<svg class="mascot" viewBox="0 0 120 120" aria-hidden="true">
     <ellipse cx="60" cy="92" rx="9" ry="12" fill="#16264A"/>
     <ellipse cx="60" cy="99" rx="6" ry="4" fill="var(--berry)"/>
   </g>
-  <ellipse class="tongue" cx="60" cy="90" rx="7" ry="9" fill="var(--berry)" stroke="var(--berry-d)" stroke-width="1.6"/>
+  <!-- A tongue, not a blob: wide where it leaves the mouth and tapering to a
+       rounded tip. The two sides meet that tip almost horizontally, so it reads
+       as a tongue rather than a spearhead. It hangs from the top edge of its own
+       box, which is what the lick and lap animations rotate and stretch about. -->
+  <path class="tongue" fill="var(--berry)" stroke="var(--berry-d)" stroke-width="1.6" stroke-linejoin="round"
+        d="M60 90.4 C64.2 90.4 65 93.6 64.4 97.6 C63.8 101.4 62.8 105.9 60 106.1
+           C57.2 105.9 56.2 101.4 55.6 97.6 C55 93.6 55.8 90.4 60 90.4 Z"/>
   <path class="mouth" d="M52 88 q8 7 16 0" fill="none" stroke="#16264A" stroke-width="3.4" stroke-linecap="round"/>
   <g class="zzz" fill="var(--ocean)" font-family="Fredoka,sans-serif" font-weight="600">
     <text x="92" y="30" font-size="15">z</text>

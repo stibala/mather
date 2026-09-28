@@ -153,11 +153,13 @@ export function sndPurr(t0){
 const MEOW_F0     = [[0, 551], [.22, 668], [.42, 668], [.55, 612], [1, 612]];
 const MEOW_BRIGHT = [[0, 1120], [.25, 2690], [.44, 2690], [.52, 1880], [1, 1830]];
 const MEOW_AMP    = [[0, .10], [.28, 1], [.48, .92], [.62, .72], [.82, .34], [1, .02]];
-const MEOW_LEN    = .38;                     // the recording is .377 s
+const MEOW_LEN    = .46;                     // the recording is .377; stretched a little,
+                                             // which the trace tolerates because every
+                                             // breakpoint is a fraction of the whole
 // A cat asks for food and then eats it, so for the foods he meows over the call
 // comes first and the chewing follows. Shared with the animation so the picture
 // and the sound stay in step.
-export const MEOW_FIRST = .46;
+export const MEOW_FIRST = .54;
 const MEOW_WAVER = [[5.3, 5], [7.9, 3]];     // rate Hz, depth Hz — two, so they never line up
 const MEOW_LEVEL = .055;
 export function sndMeow(tune, t0){

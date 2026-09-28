@@ -31,11 +31,25 @@ export function mulFacts(max, forDivision, tables){
 // past a ten, while 44 + 3 stays inside one. That is its own difficulty step and
 // has nothing to do with how big the numbers are, so it gets its own toggle.
 const ones = n => n % 10;
-function crossesTen(x, op, y){
-  if (op === "+") return ones(x) + ones(y) >= 10;
-  if (op === "−") return ones(x) < ones(y);
-  return false;                       // a carry means nothing for × and ÷
+// Crossing a ten comes in three grades, not two. Whether there is a carry at all
+// is the first question; when there is, doing it with a single digit (54 + 8) is a
+// different exercise from doing it with two two-digit numbers (38 + 46).
+//
+//   "no"    54 + 4   the units do not spill over
+//   "one"   54 + 8   they do, but only one number has tens in it
+//   "free"  38 + 46  they do, and both numbers are two-digit
+//
+// Up to 20, "free" is not offered. Two numbers of ten or more cannot ADD to under
+// 20 at all, and the only subtractions that qualify are 20 minus a teen — far too
+// narrow a corner to hand a child as a setting. Under 10 the idea does not apply
+// at all, and that band says so by offering nothing.
+export function crossKind(x, op, y){
+  const carry = op === "+" ? ones(x) + ones(y) >= 10 : ones(x) < ones(y);
+  if (!carry) return "no";
+  return x >= 10 && y >= 10 ? "free" : "one";
 }
+export const CROSS_FOR = { "10": [], "20": ["no", "one"], "100": ["no", "one", "free"] };
+
 // The biggest number in a question sits inside these bounds, so every range
 // really does practise its own size of number rather than drifting small.
 const SPAN = { 10:[4,10], 20:[11,20], 100:[21,100] };
@@ -54,17 +68,18 @@ export function makeFact(op, max, cross, tables){
     // draw from the even numbers inside the band — nudging an odd one down can
     // push it under the band's floor (11 would become 10 in the "up to 20" band)
     const [lo, hi] = SPAN[max];
-    const first = lo + (lo % 2), last = hi - (hi % 2);
-    const big = first + rnd(0, (last - first) / 2) * 2;
+    const first = lo + (lo % 2), last2 = hi - (hi % 2);
+    const big = first + rnd(0, (last2 - first) / 2) * 2;
     return op === "2×" ? [big / 2, "2×", null, big] : [big, "½", null, big / 2];
   }
   if (op === "×"){ const [x,y,p] = pick(mulFacts(max, false, tables)); return [x,"×",y,p]; }
   if (op === "÷"){ const [x,y,p] = pick(mulFacts(max, true, tables)); return [p,"÷",y,x]; }
-  const want = cross === "yes" ? true : cross === "no" ? false : null;
+  const offered = CROSS_FOR[max] || [];
+  const want = offered.includes(cross) ? cross : null;   // "mixed", or a band with no say
   let last = rawFact(op, max);
   if (want === null) return last;
   for (let t = 0; t < 240; t++){
-    if (crossesTen(last[0], last[1], last[2]) === want) return last;
+    if (crossKind(last[0], last[1], last[2]) === want) return last;
     last = rawFact(op, max);
   }
   return last;                        // asked for something this range can barely make

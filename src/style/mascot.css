@@ -31,15 +31,26 @@
 }
 @keyframes lap{0%,100%{transform:scaleY(.06)}55%{transform:scaleY(1)}}
 
-/* beat three: one contented lick of the lips */
+/* beat three: one contented lick of the lips. The mouth has to open for it — a
+   tongue coming through a drawn-shut mouth is what looked wrong before — so the
+   closed mouth is swapped for a small open one and the tongue sweeps out below it. */
 .mascot.lick{animation:leanIn .62s ease-in-out}
-.mascot.lick .eye,.mascot.lick .pupil{display:none}
+.mascot.lick .eye,.mascot.lick .pupil,.mascot.lick .mouth{display:none}
 .mascot.lick .squint{display:inline}
+.mascot.lick .yawnMouth{
+  display:inline;transform-box:fill-box;transform-origin:50% 12%;
+  animation:lickMouth .62s ease-in-out;
+}
+@keyframes lickMouth{0%,100%{transform:scale(.8,.22)}40%{transform:scale(.88,.5)}}
 .mascot.lick .tongue{
   display:inline;transform-box:fill-box;transform-origin:50% 0;
-  animation:lickOnce .6s ease-in-out;
+  animation:lickOut .62s ease-in-out;
 }
-@keyframes lickOnce{0%,100%{transform:scaleY(.06)}50%{transform:scaleY(1)}}
+@keyframes lickOut{
+  0%,100%{transform:scaleY(.05) rotate(0deg)}
+  35%{transform:scaleY(1) rotate(-27deg)}
+  70%{transform:scaleY(.92) rotate(23deg)}
+}
 
 /* asking for it: head up, mouth open, before any eating happens */
 .mascot.call{animation:callUp .9s ease-in-out}
