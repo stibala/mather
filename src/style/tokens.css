@@ -1,0 +1,59 @@
+/* ---------- tokens ---------- */
+:root{
+  --bg:#E6F1FF; --bg-2:#D3E6FF; --surface:#FFFFFF; --surface-2:#F1F7FF;
+  --ink:#16264A; --ink-2:#5A6E92; --ink-3:#8AA0C4;
+  --line:#C6DAF5; --shadow:#B9D0EE;
+  --tangerine:#FF7A1A; --tangerine-d:#D95E00;
+  --berry:#F0347B; --berry-d:#C31058;
+  --leaf:#0FA863; --leaf-d:#0A7F4A;
+  --sun:#FFC531; --sun-d:#D69C00;
+  --ocean:#2E86FF; --ocean-d:#1663CC;
+  --grape:#7C5CFF;
+  --ring:#FF7A1A;
+  color-scheme:light dark;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D1524; --bg-2:#121E33; --surface:#1A2740; --surface-2:#223151;
+    --ink:#E9F1FF; --ink-2:#9DB2D6; --ink-3:#6E86AE;
+    --line:#2E4166; --shadow:#0A1120;
+    --tangerine:#FF9147; --tangerine-d:#C4611F;
+    --berry:#FF5C95; --berry-d:#C22A63;
+    --leaf:#2FD68C; --leaf-d:#17945D;
+    --sun:#FFD35C; --sun-d:#C59A22;
+    --ocean:#5BA6FF; --ocean-d:#2E71C4;
+    --grape:#9C85FF;
+    --ring:#FF9147;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D1524; --bg-2:#121E33; --surface:#1A2740; --surface-2:#223151;
+  --ink:#E9F1FF; --ink-2:#9DB2D6; --ink-3:#6E86AE;
+  --line:#2E4166; --shadow:#0A1120;
+  --tangerine:#FF9147; --tangerine-d:#C4611F;
+  --berry:#FF5C95; --berry-d:#C22A63;
+  --leaf:#2FD68C; --leaf-d:#17945D;
+  --sun:#FFD35C; --sun-d:#C59A22;
+  --ocean:#5BA6FF; --ocean-d:#2E71C4;
+  --grape:#9C85FF;
+  --ring:#FF9147;
+}
+
+/* ---------- reset ---------- */
+*{box-sizing:border-box}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  background-image:radial-gradient(circle at 12% 8%, var(--bg-2) 0, transparent 45%),
+                   radial-gradient(circle at 88% 92%, var(--bg-2) 0, transparent 42%);
+  color:var(--ink);
+  font-family:Nunito,'Segoe UI',system-ui,-apple-system,sans-serif;
+  font-size:16px; line-height:1.45;
+  -webkit-text-size-adjust:100%;
+}
+img{max-width:100%}
+[hidden]{display:none!important}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--ring);outline-offset:3px}
+

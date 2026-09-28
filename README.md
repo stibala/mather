@@ -1,17 +1,68 @@
 # Numo Math Club
 
-A maths trainer for kids. One file, `index.html`, no build step, no server, no
-dependencies, works offline. Replaces the Streamlit version in `../math_trainer`.
+A maths trainer for kids. Ships as **one file** — `index.html`, no dependencies,
+no server, works offline, opens by double-click — but the source is split up so it
+can be read and tested.
 
-## Run it
+```
+src/
+  page.html        the markup, with /*__CSS__*/ and //__JS__ holes
+  manifest.json    which modules are bundled, and in what order
+  core/            storage, the reward tables, the database, dom helpers, audio
+  gen/             the question generators — sums, clock, line, wall, money
+  ui/              setup, quiz, result, progress, crate, bowl, stickers, csv, chrome
+  style/           tokens, layout, quiz, rewards, overlays
+test/              the suites, a fake DOM, and the runner
+build.py           src/ -> index.html
+index.html         generated, committed, and what gets published
+```
 
-Double-click `index.html`, or:
+## Working on it
 
-    make open      # opens the file in your browser
-    make run       # serves it on http://localhost:8000
+    make build     rebuild index.html from src/   (do this after every edit)
+    make test      run every suite against the source
+    make check     the dependency graph, and anything used before it is declared
+    make run       serve on http://localhost:8000
+    make open      just open the built file
 
-To use it on a tablet, run `make run` and open `http://<your-mac-ip>:8000`
-from the tablet on the same wifi.
+**`index.html` is generated — never edit it by hand.** Edit `src/` and run
+`make build`. It is committed anyway, because it is the artifact: the thing that
+gets published, double-clicked, and copied onto a tablet.
+
+To use it on a tablet, run `make run` and open `http://<your-mac-ip>:8000`.
+
+### Why a build step rather than real module files
+
+Browsers refuse to load ES modules over `file://`, so shipping separate `.js`
+files would cost the double-click-to-open property, which is most of why this app
+is pleasant to live with. So the modules use real `import`/`export` — editors and
+tests understand them — and `build.py` strips both and concatenates in manifest
+order.
+
+Everything therefore lands in **one shared scope, in manifest order**, which makes
+that order load-bearing. `make check` prints the graph and flags every name used
+before the file that declares it: a forward reference to a `function` is fine
+(hoisted), one to a `const` or `let` is only safe because it is read at call time.
+There are seven of the latter, all listed.
+
+### Tests
+
+`make test` runs each suite against the real source through a fake DOM
+(`test/dom-stub.js`), using JavaScriptCore, which ships with macOS. No node, no
+npm.
+
+- `generators.test.js` — ~80,000 generated questions across every mode and
+  setting, checked for arithmetic, ranges, carry settings, clock spans that really
+  are that far apart, and number walls where every gap is solvable when it is asked.
+- `rewards.test.js` — the sticker table, the tin, the crate's reveal-and-bank
+  sequence on a virtual clock, feeding, and giving a toy to Numo.
+- `migration.test.js` — saves written by every previous version, replayed. The
+  standing rule is that a child may gain from a repricing but must never lose.
+
+The stub is deliberately faithful where the app leans on the platform — `className`
+and `classList` are the same object, `append` moves a node and sets `parentNode`,
+and `setTimeout` runs on a virtual clock the tests advance by hand. Each of those
+started as a convenient lie that made correct code look broken.
 
 ## What it does
 

@@ -1,0 +1,32 @@
+{
+  "js": [
+    "core/storage.js",
+    "core/prizes.js",
+    "core/db.js",
+    "core/dom.js",
+    "core/audio.js",
+    "gen/sums.js",
+    "gen/clock.js",
+    "gen/line.js",
+    "gen/wall.js",
+    "gen/money.js",
+    "ui/setup.js",
+    "ui/quiz.js",
+    "ui/result.js",
+    "ui/progress.js",
+    "ui/held.js",
+    "ui/crate.js",
+    "ui/bowl.js",
+    "ui/stickers.js",
+    "ui/csv.js",
+    "ui/chrome.js",
+    "boot.js"
+  ],
+  "css": [
+    "tokens.css",
+    "layout.css",
+    "quiz.css",
+    "rewards.css",
+    "overlays.css"
+  ]
+}

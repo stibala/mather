@@ -1,0 +1,130 @@
+/* ---------- sticker viewer ---------- */
+.overlay{
+  position:fixed;inset:0;z-index:60;display:grid;place-items:center;padding:20px;
+  background:color-mix(in srgb,var(--ink) 55%,transparent);
+  padding-top:calc(20px + env(safe-area-inset-top,0px));
+  padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
+}
+.sheet{
+  position:relative;width:100%;max-width:340px;text-align:center;
+  background:var(--surface);border:2px solid var(--line);border-radius:28px;
+  box-shadow:0 6px 0 var(--shadow);padding:26px 22px 22px;
+  animation:pop .34s cubic-bezier(.2,1.5,.4,1);
+}
+.sheet .close{
+  position:absolute;top:10px;right:10px;width:34px;height:34px;border-radius:12px;
+  background:var(--surface-2);border:2px solid var(--line);font-size:1.15rem;
+  font-family:Fredoka,sans-serif;line-height:1;color:var(--ink-2);
+}
+.sv-gallery{display:flex;align-items:center;justify-content:center;gap:8px;margin:2px 0 12px}
+.arrow{
+  width:40px;height:40px;flex:none;border-radius:999px;display:grid;place-items:center;
+  background:var(--surface-2);border:2px solid var(--line);color:var(--ink-2);
+  font-family:Fredoka,sans-serif;font-size:1.6rem;line-height:1;padding-bottom:4px;
+  transition:transform .08s;
+}
+.arrow:active{transform:scale(.92)}
+.arrow:disabled{opacity:.26;cursor:default}
+.sv-art{
+  width:150px;height:150px;flex:none;margin:0;border-radius:38px;
+  display:grid;place-items:center;font-size:5.4rem;line-height:1;
+  background:radial-gradient(circle at 50% 42%,var(--glow,var(--sun)) 0,var(--surface-2) 74%);
+  border:3px solid var(--ring,var(--sun));
+}
+.sv-art.locked{border-color:var(--line);border-style:dashed;background:var(--surface-2);color:var(--ink-3);font-family:Fredoka,sans-serif;font-size:4rem}
+.sv-name{margin:0;font-family:Fredoka,sans-serif;font-weight:600;font-size:1.6rem;line-height:1.15}
+.sv-meta{margin:2px 0 16px;font-size:.85rem;font-weight:700;color:var(--ink-2)}
+.sheet #giveBtn{margin-top:2px}
+.sv-nav{display:flex;gap:9px}
+.sv-nav button{flex:1;font-size:.95rem;padding:11px 8px}
+.sv-nav button:disabled{opacity:.35;cursor:default}
+.sticker.won{border-color:var(--ring);background:radial-gradient(circle at 50% 35%,var(--glow) 0,var(--surface-2) 78%);box-shadow:0 2px 0 var(--ring)}
+.best{
+  width:26px;height:26px;flex:none;border-radius:9px;display:grid;place-items:center;font-size:.92rem;
+  border:2px solid var(--ring,var(--line));background:radial-gradient(circle at 50% 35%,var(--glow,var(--surface-2)) 0,var(--surface-2) 80%);
+}
+.bestrow{display:flex;align-items:center;gap:11px;margin:-4px 0 14px}
+.bestrow span:last-child{display:flex;flex-direction:column;line-height:1.25}
+.bestrow b{font-family:Fredoka,sans-serif;font-weight:600;font-size:1.06rem}
+.bestrow em{font-style:normal;font-size:.76rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2)}
+.best.big-best{width:52px;height:52px;border-radius:16px;font-size:1.9rem;border-width:3px}
+.sv-art{border-color:var(--ring,var(--sun))}
+button.sticker{font-family:inherit}
+button.sticker:active{transform:translateY(2px);box-shadow:none}
+.sticker.locked{border-style:dashed;color:var(--ink-3);font-family:Fredoka,sans-serif;font-size:1.3rem}
+
+/* ---------- adding a player ---------- */
+.namefield{
+  width:100%;margin:8px 0 2px;padding:12px 14px;border-radius:14px;
+  border:2px solid var(--line);background:var(--surface-2);color:var(--ink);
+  font-family:Fredoka,sans-serif;font-size:1.25rem;text-align:center;
+}
+.namefield::placeholder{color:var(--ink-3)}
+.namefield:focus{outline:none;border-color:var(--tangerine)}
+.facepick{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:6px 0 16px}
+.facepick button{
+  aspect-ratio:1;display:grid;place-items:center;font-size:1.25rem;
+  background:var(--surface-2);border:2px solid var(--line);border-radius:12px;
+}
+.facepick button[aria-pressed="true"]{border-color:var(--tangerine);background:color-mix(in srgb,var(--tangerine) 20%,var(--surface))}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;left:50%;transform:translateX(-50%);z-index:70;
+  bottom:calc(22px + env(safe-area-inset-bottom,0px));
+  max-width:min(420px,calc(100% - 32px));
+  background:var(--ink);color:var(--surface);border-radius:14px;padding:12px 18px;
+  font-weight:800;font-size:.9rem;text-align:center;box-shadow:0 6px 22px rgba(0,0,0,.28);
+}
+
+/* ---------- confetti ---------- */
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:50}
+
+/* ---------- mascot animation ---------- */
+.mascot .eye{transform-box:fill-box;transform-origin:center;animation:blinkEye 5.2s infinite}
+@keyframes blinkEye{0%,95%,100%{transform:scaleY(1)}97%{transform:scaleY(.08)}}
+.mascot.hop{animation:hop .5s cubic-bezier(.3,1.5,.4,1)}
+@keyframes hop{0%,100%{transform:none}35%{transform:translateY(-14px) rotate(-5deg)}70%{transform:translateY(0) rotate(3deg)}}
+.mascot.shake{animation:shake .42s}
+@keyframes shake{0%,100%{transform:none}20%{transform:translateX(-7px) rotate(-4deg)}50%{transform:translateX(7px) rotate(4deg)}80%{transform:translateX(-4px)}}
+.bubble.buzz{animation:shake .42s}
+
+/* the cat gets bored when a question sits too long: looks around, meows, dozes off */
+.cat{position:relative;flex:none}
+.cat .mascot{display:block;overflow:visible}
+.mascot .lid,.mascot .zzz,.mascot .squint,.mascot .yawnMouth{display:none}
+.mascot.yawn{transform-origin:50% 100%;animation:yawnStretch 2s ease-in-out}
+@keyframes yawnStretch{0%,100%{transform:none}35%,65%{transform:scale(.97,1.06) rotate(-3deg)}}
+.mascot.yawn .eye,.mascot.yawn .pupil,.mascot.yawn #mouth{display:none}
+.mascot.yawn .squint,.mascot.yawn .yawnMouth{display:inline}
+.mascot .yawnMouth{transform-box:fill-box;transform-origin:50% 0;animation:yawnOpen 2s ease-in-out forwards}
+@keyframes yawnOpen{0%{transform:scale(.4,.15)}35%,65%{transform:scale(1)}100%{transform:scale(.4,.15)}}
+.mascot .pupil{transform-box:fill-box;transform-origin:center}
+.mascot.look .pupil{animation:lookAround 2.4s ease-in-out}
+@keyframes lookAround{0%,100%{transform:none}20%,40%{transform:translate(-5px,-2px)}60%,80%{transform:translate(5px,-2px)}}
+.mascot.tilt{animation:tilt 1s ease-in-out}
+@keyframes tilt{0%,100%{transform:none}30%,70%{transform:rotate(-9deg)}}
+.mascot.sleep{transform-origin:50% 100%;animation:breathe 3.2s ease-in-out infinite}
+@keyframes breathe{0%,100%{transform:none}50%{transform:scale(1.035,.97)}}
+.mascot.sleep .eye,.mascot.sleep .pupil{display:none}
+.mascot.sleep .lid,.mascot.sleep .zzz{display:inline}
+.mascot .zzz text{opacity:.85;animation:zFloat 3s ease-in infinite}
+.mascot .zzz text:nth-child(2){animation-delay:1s}
+.mascot .zzz text:nth-child(3){animation-delay:2s}
+@keyframes zFloat{0%{opacity:0;transform:translate(-6px,8px)}25%{opacity:.9}100%{opacity:0;transform:translate(4px,-8px)}}
+.purr{
+  position:absolute;left:50%;bottom:calc(100% - 12px);z-index:2;white-space:nowrap;pointer-events:none;
+  background:var(--surface);border:2px solid var(--line);border-radius:12px;padding:3px 10px;
+  font-family:Fredoka,sans-serif;font-weight:600;font-size:.95rem;color:var(--tangerine-d);
+  opacity:0;transform:translate(-50%,6px) scale(.8);transition:opacity .2s,transform .25s cubic-bezier(.3,1.5,.4,1);
+}
+.purr.on{opacity:1;transform:translate(-50%,0) scale(1)}
+:root[data-theme="dark"] .purr{color:var(--tangerine)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .purr{color:var(--tangerine)}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}
+}
+@media (max-width:400px){
+  .opts.five{grid-template-columns:repeat(3,1fr)}
+  .mascot{width:76px;height:76px}
+}

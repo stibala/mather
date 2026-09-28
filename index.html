@@ -1094,25 +1094,28 @@ function load(){
     // Prizes used to be a flat 25 each; tiers made the later ones dearer, which
     // would quietly take some back. Top the balance up to whatever the old flat
     // price had already bought, so the collection only ever grows.
-    // Rewards split in two: the first 12 prizes were food, which are treats now
-    // and come out of the coin count anyway. Anything the child had beyond those
-    // was a keepsake, so top the balance up to hold that many stickers.
-    // Treats used to be a count; now they are items. Turn whatever was left in
-    // the old count into real treats so none of them vanish.
+    // Migrations, in version order. The rule every time: a child may gain from a
+    // repricing but must never lose. What counted as a keepsake changed though --
+    // v1 to v3 sold 16 animal stickers and nothing else, v4 put 12 snacks at the
+    // front of the same list, and v5 pulled those snacks out into treats. So only
+    // a v4 save has 12 prizes to discount; discounting them for an older save
+    // silently takes stickers off a child who earned them.
+    if (!stored.v || stored.v < 5){
+      const wereFood = stored.v === 4 ? 12 : 0;
+      Object.values(db.stats || {}).forEach(st => {
+        const hadFlat = Math.floor((st.coins || 0) / PER_STICKER);
+        const keepsakes = Math.min(Math.max(0, hadFlat - wereFood), THRESH.length);
+        if (keepsakes > 0) st.coins = Math.max(st.coins, THRESH[keepsakes - 1]);
+        st.fed = st.fed || 0;
+      });
+    }
+    // v6: treats stopped being a number and became things in a tin.
     if (!stored.v || stored.v < 6){
       Object.values(db.stats || {}).forEach(st => {
         if (!Array.isArray(st.tin)){
           const left = Math.max(0, Math.floor((st.coins || 0) / TREAT_COST) - (st.fed || 0));
           st.tin = Array.from({ length: left }, () => TREATS[Math.floor(Math.random() * TREATS.length)]);
         }
-      });
-    }
-    if (!stored.v || stored.v < 5){
-      Object.values(db.stats || {}).forEach(st => {
-        const hadFlat = Math.floor((st.coins || 0) / PER_STICKER);
-        const keepsakes = Math.min(Math.max(0, hadFlat - 12), THRESH.length);
-        if (keepsakes > 0) st.coins = Math.max(st.coins, THRESH[keepsakes - 1]);
-        st.fed = st.fed || 0;
       });
     }
     db.v = 6;
