@@ -35,7 +35,7 @@ section("nothing a child had is thrown away");
   ok(prizesFor(s.coins) >= keepsakes,
      "   " + prizesFor(s.coins) + " stickers, and they had earned " + keepsakes);
   ok(Array.isArray(s.tin), "   treats are real items now (" + s.tin.length + " in the tin)");
-  ok(db.v === 6, "   stamped as v" + db.v);
+  ok(db.v === DEFAULT_DB.v, "   stamped as v" + db.v);
 });
 
 section("a v5 tin converts exactly");
@@ -65,5 +65,11 @@ const old = saveOf(4, 100); old.settings = { range:"10", moneyTo:"500", wallBlan
 const s2 = loadSave(old).settings;
 ok(["1000","2000","10000"].includes(s2.moneyTo), "a money range that was rescaled becomes a valid one (" + s2.moneyTo + ")");
 ok(s2.mode === "sum" && s2.lineTask, "settings added since then get their defaults");
+const w50 = saveOf(6, 100); w50.settings = { wallTo:"50" };
+ok(loadSave(w50).settings.wallTo === "20", "the wall that went away drops to the small one, not the big one");
+["10","20","100"].forEach(t => {
+  const k = saveOf(6, 100); k.settings = { wallTo:t };
+  ok(loadSave(k).settings.wallTo === t, "a wall of " + t + " is left alone");
+});
 
 done();

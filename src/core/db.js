@@ -18,7 +18,7 @@ const DEFAULT_DB = {
               clockTask:"read", count:10 },
   sound: true,
   theme: "system",
-  v: 6
+  v: 7
 };
 
 function load(){
@@ -67,7 +67,12 @@ function load(){
         }
       });
     }
-    db.v = 6;
+    // v7: the 50-wall made way for a 10-wall. A save still asking for 50 would
+    // light up no button at all, so it drops to the small wall rather than the
+    // big one — a round that turns out too easy costs one tap, one that turns
+    // out too hard costs a child's afternoon.
+    if (!["10","20","100"].includes(db.settings.wallTo)) db.settings.wallTo = "20";
+    db.v = 7;
     return db;
   } catch { return structuredClone(DEFAULT_DB); }
 }

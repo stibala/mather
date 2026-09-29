@@ -42,7 +42,9 @@ export let wallState = null;
 function newWall(settings){
   const r = Number(settings.wallRows), max = Number(settings.wallTo);
   const weightSum = r === 3 ? 4 : r === 4 ? 8 : 16;
-  const cap = Math.max(2, Math.floor(max / weightSum) * 2);
+  // The floor is 3, not 2: a 4-row wall capped at 10 works out to 2, which leaves
+  // only bricks of 1 and 2 to draw from and the same few walls come round again.
+  const cap = Math.max(3, Math.floor(max / weightSum) * 2);
   let rows = null;
   for (let t = 0; t < 160; t++){
     const built = buildWall(Array.from({ length: r }, () => rnd(1, cap)));

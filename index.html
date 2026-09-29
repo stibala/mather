@@ -716,8 +716,8 @@ button.sticker:active{transform:translateY(2px);box-shadow:none}
     <section class="panel for-wall" hidden>
       <h2>How big does it go? <small>the top brick stays under this</small></h2>
       <div class="opts three" id="wallToOpts">
+        <button class="opt" data-wall-to="10"  aria-pressed="false"><span class="t">to 10</span></button>
         <button class="opt" data-wall-to="20"  aria-pressed="true"><span class="t">to 20</span></button>
-        <button class="opt" data-wall-to="50"  aria-pressed="false"><span class="t">to 50</span></button>
         <button class="opt" data-wall-to="100" aria-pressed="false"><span class="t">to 100</span></button>
       </div>
     </section>
@@ -1142,7 +1142,7 @@ const DEFAULT_DB = {
               clockTask:"read", count:10 },
   sound: true,
   theme: "system",
-  v: 6
+  v: 7
 };
 
 function load(){
@@ -1191,7 +1191,12 @@ function load(){
         }
       });
     }
-    db.v = 6;
+    // v7: the 50-wall made way for a 10-wall. A save still asking for 50 would
+    // light up no button at all, so it drops to the small wall rather than the
+    // big one — a round that turns out too easy costs one tap, one that turns
+    // out too hard costs a child's afternoon.
+    if (!["10","20","100"].includes(db.settings.wallTo)) db.settings.wallTo = "20";
+    db.v = 7;
     return db;
   } catch { return structuredClone(DEFAULT_DB); }
 }
@@ -1718,27 +1723,47 @@ function lineText(q){
 }
 
 function lineSVG(q){
-  const W = 640, arcs = q.task !== "read";
-  const H = arcs ? 132 : 104, baseY = arcs ? 96 : 60;
+  const W = 640, tall = q.task !== "read";
+  const H = tall ? 132 : 104, baseY = tall ? 96 : 60;
   const padL = 30, padR = 30, v = q.view, span = v.hi - v.lo;
   const X = n => padL + ((n - v.lo) / span) * (W - padL - padR);
+  // Rounding asks which of two tens is nearest, so those two tens are marked out
+  // and the arrow is not: reading puts the ? on the arrow, rounding puts it on
+  // the choice. Without that the two tasks drew the same picture.
+  const down = q.task === "round" ? Math.floor(q.v / 10) * 10 : null;
+  const near = down === null ? [] : [down, down + 10];
   let ticks = "";
   for (let n = v.lo; n <= v.hi; n++){
-    const lab = n % v.label === 0, x = X(n).toFixed(1);
+    const lab = n % v.label === 0, hot = near.includes(n), x = X(n).toFixed(1);
     ticks += `<line x1="${x}" y1="${baseY - (lab ? 13 : 6)}" x2="${x}" y2="${baseY + (lab ? 13 : 6)}" `
-          +  `stroke="${lab ? "var(--ink-2)" : "var(--line)"}" stroke-width="${lab ? 3 : 1.8}" stroke-linecap="round"/>`;
+          +  `stroke="${hot ? "var(--berry)" : lab ? "var(--ink-2)" : "var(--line)"}" stroke-width="${lab ? 3 : 1.8}" stroke-linecap="round"/>`;
     if (lab) ticks += `<text x="${x}" y="${baseY + 32}" text-anchor="middle" font-family="Fredoka, sans-serif" `
-                   +  `font-size="17" font-weight="500" fill="var(--ink-2)">${n}</text>`;
+                   +  `font-size="17" font-weight="${hot ? 600 : 500}" fill="${hot ? "var(--berry)" : "var(--ink-2)"}">${n}</text>`;
   }
   // the line runs on past an edge only where there really are more numbers
   let axis = `<line x1="${padL - 16}" y1="${baseY}" x2="${W - padR + 16}" y2="${baseY}" stroke="var(--ink-2)" stroke-width="3.2" stroke-linecap="round"/>`;
   if (v.hi < 100) axis += `<path d="M${W - padR + 16} ${baseY} l-11 -6 v12 z" fill="var(--ink-2)"/>`;
   if (v.lo > 0)   axis += `<path d="M${padL - 16} ${baseY} l11 -6 v12 z" fill="var(--ink-2)"/>`;
   let art = "";
-  if (q.task === "read" || q.task === "round"){
+  if (q.task === "read"){
     const x = X(q.v).toFixed(1);
     art = `<path d="M${x} ${baseY - 5} l-13 -20 h26 z" fill="var(--berry)"/>
       <text x="${x}" y="${baseY - 32}" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="30" font-weight="600" fill="var(--berry)">?</text>`;
+  } else if (q.task === "round"){
+    // The arrow carries its own number — that part is not the question. The two
+    // tens wear the ?, and a dashed span runs from the arrow to each of them, so
+    // the shorter one can be seen rather than worked out.
+    const x = X(q.v), xa = X(near[0]), xb = X(near[1]), spanY = baseY - 46;
+    const F = n => n.toFixed(1);
+    const cap = t => `<line x1="${F(t)}" y1="${spanY - 5}" x2="${F(t)}" y2="${spanY + 5}" stroke="var(--ocean)" stroke-width="2.4" stroke-linecap="round"/>`;
+    art = `<line x1="${F(xa)}" y1="${spanY}" x2="${F(x)}" y2="${spanY}" stroke="var(--ocean)" stroke-width="2.4" stroke-dasharray="5 5" stroke-linecap="round"/>
+      <line x1="${F(x)}" y1="${spanY}" x2="${F(xb)}" y2="${spanY}" stroke="var(--ocean)" stroke-width="2.4" stroke-dasharray="5 5" stroke-linecap="round"/>
+      ${cap(xa)}${cap(x)}${cap(xb)}
+      <circle cx="${F(xa)}" cy="${baseY}" r="8.5" fill="var(--berry)"/>
+      <circle cx="${F(xb)}" cy="${baseY}" r="8.5" fill="var(--berry)"/>
+      <path d="M${F(x)} ${baseY - 5} l-9 -14 h18 z" fill="var(--ink-2)"/>
+      <text x="${F(x)}" y="${F(baseY - 24)}" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="21" font-weight="600" fill="var(--ink-2)">${q.v}</text>
+      <text x="${F((xa + xb) / 2)}" y="${F(spanY - 16)}" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="30" font-weight="600" fill="var(--berry)">?</text>`;
   } else {
     const xs = X(q.s), xe = X(q.e), mid = (xs + xe) / 2, top = baseY - 66;
     art = `<path d="M${xs.toFixed(1)} ${baseY - 12} Q ${mid.toFixed(1)} ${top} ${xe.toFixed(1)} ${(baseY - 14).toFixed(1)}"
@@ -1752,7 +1777,10 @@ function lineSVG(q){
          <text x="${xe.toFixed(1)}" y="${(baseY + 32).toFixed(1)}" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="20" font-weight="600" fill="var(--ocean)">${q.e}</text>`
       : `<text x="${xe.toFixed(1)}" y="${(baseY + 34).toFixed(1)}" text-anchor="middle" font-family="Fredoka, sans-serif" font-size="26" font-weight="600" fill="var(--berry)">?</text>`;
   }
-  return `<svg class="linefig" viewBox="0 0 ${W} ${H}" role="img" aria-label="${q.ask} Read it from the number line running from ${v.lo} to ${v.hi}.">${axis}${ticks}${art}</svg>`;
+  const alt = q.task === "round"
+    ? `${q.ask} The arrow stands at ${q.v}, between ${near[0]} and ${near[1]} on the number line.`
+    : `${q.ask} Read it from the number line running from ${v.lo} to ${v.hi}.`;
+  return `<svg class="linefig" viewBox="0 0 ${W} ${H}" role="img" aria-label="${alt}">${axis}${ticks}${art}</svg>`;
 }
 
 /* ---------- Zahlenmauer: the number wall ---------- */
@@ -1797,7 +1825,9 @@ let wallState = null;
 function newWall(settings){
   const r = Number(settings.wallRows), max = Number(settings.wallTo);
   const weightSum = r === 3 ? 4 : r === 4 ? 8 : 16;
-  const cap = Math.max(2, Math.floor(max / weightSum) * 2);
+  // The floor is 3, not 2: a 4-row wall capped at 10 works out to 2, which leaves
+  // only bricks of 1 and 2 to draw from and the same few walls come round again.
+  const cap = Math.max(3, Math.floor(max / weightSum) * 2);
   let rows = null;
   for (let t = 0; t < 160; t++){
     const built = buildWall(Array.from({ length: r }, () => rnd(1, cap)));

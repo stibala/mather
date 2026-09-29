@@ -131,7 +131,7 @@ ok(bad === 0, n + " clock questions, " + bad + " bad");
 section("the number wall: every gap must be solvable when it is asked");
 n = 0; bad = 0;
 for (const wallRows of ["3","4"])
-  for (const wallTo of ["20","50","100"]) {
+  for (const wallTo of ["10","20","100"]) {
     for (let round = 0; round < 500; round++){
       wallState = null;
       const seen = new Set(), settings = { wallRows, wallTo };
